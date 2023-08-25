@@ -1,0 +1,36 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDate, IsString, IsOptional } from 'class-validator';
+
+export class UpdateInvoiceDto {
+   @IsString()
+   @IsOptional()
+   @ApiProperty({ example: 'INV-20230714', description: 'Invoice number' })
+   number: string;
+
+   @IsDate()
+   @IsOptional()
+   @ApiProperty({ example: '2023-07-14', description: 'Invoice date' })
+   invoiceDate: Date;
+
+   @IsOptional()
+   @IsDate()
+   @ApiProperty({ example: '2023-07-21', description: 'Due date' })
+   dueDate: Date;
+
+   @IsDate()
+   @IsOptional()
+   @ApiProperty({ example: '2023-07-21 12:00:00', description: 'Payment date' })
+   paymentDate: Date;
+
+   @IsString()
+   @IsOptional()
+   orderId: string;
+
+   @IsString()
+   @IsOptional()
+   @ApiProperty({
+      example: 'da400369-2342-42c1-980f-17d3519267aa',
+      description: `payment's id`,
+   })
+   paymentId: string;
+}
