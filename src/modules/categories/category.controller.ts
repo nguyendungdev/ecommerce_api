@@ -28,7 +28,7 @@ import {
 import { CommonDescription } from 'src/common/constants/descriptions.constants';
 import { ErrorResponse } from '../../common/dto/response.dto';
 import { CategoryService } from './category.service';
-import { Category } from './category.entity';
+import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CommonSummary } from 'src/common/constants/summary.constants';
@@ -63,7 +63,7 @@ export class CategoryController {
       return this.categoryService.getAll();
    }
 
-   @Post('/add-new')
+   @Post('')
    @HttpCode(HttpStatus.OK)
    @ApiOperation({ summary: `${CommonSummary.CREATE_NEW_ITEM} category` })
    @ApiBody({ type: CreateCategoryDto })
@@ -83,7 +83,7 @@ export class CategoryController {
       return this.categoryService.create(createCategoryDto);
    }
 
-   @Delete('/delete/:id')
+   @Delete('/:id')
    @HttpCode(HttpStatus.OK)
    @ApiParam({ name: 'id', type: 'string' })
    @ApiOperation({ summary: `${CommonSummary.DELETE_ITEM} category by ID` })
@@ -95,14 +95,11 @@ export class CategoryController {
       type: ErrorResponse,
    })
    async delete(@Param() id: string) {
-      try {
-         await this.categoryService.delete(id);
-      } catch (e) {
-         throw new NotFoundException(e);
-      }
+      await this.categoryService.delete(id);
+
    }
 
-   @Put('/update/:id')
+   @Put('/:id')
    @ApiOperation({ summary: 'Update category by ID' })
    @ApiParam({ name: 'id', type: 'string' })
    @ApiBody({ type: UpdateCategoryDto })

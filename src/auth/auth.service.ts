@@ -5,7 +5,7 @@ import JwtPayload from './payloads/jwtPayload';
 import { AuthMessage } from './auth.constants';
 import TokenResponseDto from './dto/token-response.dto';
 import { UserService } from '../modules/user/user.service';
-import { User } from '../modules/user/user.entity';
+import { User } from '../modules/user/entities/user.entity';
 import { emailConfirm } from '../configs/configs.constants';
 import EmailService from '../modules/email/email.service';
 import EmailConfirmPayload from './payloads/EmailCheckPayload';
@@ -33,7 +33,7 @@ export class AuthService {
       };
       await this.usersService.create(authCredentialsDto);
       const jwtAccessToken = await this.jwtService.signAsync(payload);
-      await this.sendVerificationLink(payload.email);
+      //  await this.sendVerificationLink(payload.email);
       return { jwtAccessToken };
    }
 

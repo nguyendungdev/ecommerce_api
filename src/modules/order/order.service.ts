@@ -1,22 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderRepository } from './order.repository';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Order } from './order.entity';
-import { OrderItem } from './oder-item.entity';
+import { Order } from './entities/order.entity';
+import { OrderItem } from './entities/oder-item.entity';
 import { OrderItemRepository } from './order-item.repository';
 import { CreateOrderDto, OrderItemDto } from './dto/create-order.dto';
 import { ProductService } from '../product/product.service';
 import { OrderStatus } from './order-status.enum';
-import { OrderDto, UpdateOrderDto } from './dto/update-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
+import { UserService } from '../user/user.service';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class OrderService {
    constructor(
-      @InjectRepository(Order)
       private readonly orderRepository: OrderRepository,
-      @InjectRepository(OrderItem)
       private readonly orderItemRepository: OrderItemRepository,
       private readonly productService: ProductService,
+      private readonly userService: UserService,
    ) { }
 
    /**
@@ -25,11 +25,10 @@ export class OrderService {
     * @returns Promise<Order[]> - Array of Order objects.
     * @throws NotFoundException - If no orders are found for the user.
     */
-   async findOrders(userId: string): Promise<Order[]> {
-      const orders = await this.orderRepository.findBy({
-         userId: userId,
-         deleteAt: null,
-      });
+   async findOrders(userId: User['id']): Promise<Order[]> {
+      if (!(await this.userService.getById(userId))) {
+      }
+      const orders = await this.orderRepository.getByUserId(userId);
       if (!orders || orders.length === 0) {
          throw new NotFoundException(`User has no orders`);
       }
@@ -43,11 +42,8 @@ export class OrderService {
     * @returns Promise<Order> - Order object if found.
     * @throws NotFoundException - If the order is not found.
     */
-   async findOrder(id: string): Promise<Order> {
-      const order = this.orderRepository.findOneBy({
-         id: id,
-         deleteAt: null,
-      });
+   async findOrder(id: Order['id']): Promise<Order> {
+      const order = this.orderRepository.getOneOrderById(id);
       if (!order) {
          throw new NotFoundException(`user have no orders`);
       }
@@ -58,15 +54,14 @@ export class OrderService {
     * Update order status based on order date.
     * @param userId string - ID of the user.
     */
-   async updateStatus(userId: string): Promise<void> {
+   async updateStatus(userId: User['id']): Promise<void> {
       const today = new Date();
       const orders = await this.findOrders(userId);
 
       for (const item of orders) {
-         const itemDate = item.orderDate;
+         const itemDate = item.order_date;
          const threeDaysLater = new Date(itemDate);
          threeDaysLater.setDate(threeDaysLater.getDate() + 3);
-         console.log(threeDaysLater);
          const eightDaysLater = new Date(itemDate);
          eightDaysLater.setDate(eightDaysLater.getDate() + 7);
 
@@ -77,7 +72,6 @@ export class OrderService {
          } else {
             item.status = OrderStatus.PROCESSED;
          }
-
          await item.save();
       }
    }
@@ -87,16 +81,16 @@ export class OrderService {
     * @param orderId string - ID of the order.
     * @returns Promise<number> - Total price of the items.
     */
-   async getInvoiceTotalPrice(orderId: string): Promise<number> {
+   async getInvoiceTotalPrice(orderId: Order['id']): Promise<number> {
       const order = await this.orderItemRepository.find({
          where: {
-            orderId: orderId,
-            deleteAt: null,
+            order_id: orderId,
+            delete_at: null,
          },
       });
       let invoicePrice = 0;
       for (const item of order) {
-         invoicePrice += Number(item.totalPrice);
+         invoicePrice += Number(item.total_price);
       }
       return invoicePrice;
    }
@@ -106,13 +100,16 @@ export class OrderService {
     * @param id string - ID of the order.
     * @param item OrderItemDto - Data for the order item.
     */
-   async createOrderItem(id: string, item: OrderItemDto): Promise<void> {
+   async createOrderItem(
+      id: OrderItem['id'],
+      item: OrderItemDto,
+   ): Promise<void> {
       const newOrderItem = await this.orderItemRepository.create();
-      newOrderItem.quantity = item.quantity;
-      newOrderItem.totalPrice =
-         (await this.productService.getPrice(item.productId)) * item.quantity;
-      newOrderItem.orderId = id;
-      newOrderItem.productId = item.productId;
+      newOrderItem.quanity = item.quanity;
+      newOrderItem.total_price =
+         (await this.productService.getPrice(item.product_id)) * item.quanity;
+      newOrderItem.order_id = id;
+      newOrderItem.product_id = item.product_id;
       await newOrderItem.save();
    }
 
@@ -121,17 +118,17 @@ export class OrderService {
     * @param createOrderDto CreateOrderDto - Data to create a new order.
     */
    async createOrder(createOrderDto: CreateOrderDto): Promise<void> {
-      const { orderDate, status, shipmentDate, comment, shippedTo, userId } =
+      const { order_date, status, shipment_date, comment, shipped_to, user_id } =
          createOrderDto;
       const newOrder = await this.orderRepository.create();
       newOrder.comment = comment;
-      newOrder.orderDate = orderDate;
+      newOrder.order_date = order_date;
       newOrder.status = status;
-      newOrder.shipmentDate = shipmentDate;
-      newOrder.shippedTo = shippedTo;
-      newOrder.userId = userId;
+      newOrder.shipment_date = shipment_date;
+      newOrder.shipped_to = shipped_to;
+      newOrder.user_id = user_id;
       await newOrder.save();
-      for (const item of createOrderDto.orderItems) {
+      for (const item of createOrderDto.order_items) {
          await this.createOrderItem(newOrder.id, item);
       }
    }
@@ -140,7 +137,7 @@ export class OrderService {
     * Delete an order item by its ID.
     * @param orderItemId string - ID of the order item to delete.
     */
-   async deleteOrderItem(orderItemId: string): Promise<void> {
+   async deleteOrderItem(orderItemId: OrderItem['id']): Promise<void> {
       const result = await this.orderItemRepository.softDelete(orderItemId);
       if (result.affected === 0) {
          throw new NotFoundException(`Order item not found`);
@@ -151,10 +148,10 @@ export class OrderService {
     * Delete an order by its ID, along with its associated order items.
     * @param orderId string - ID of the order to delete.
     */
-   async deleteOrder(orderId: string): Promise<void> {
+   async deleteOrder(orderId: Order['id']): Promise<void> {
       const orderItem = await this.orderItemRepository.find({
          where: {
-            orderId: orderId,
+            order_id: orderId,
          },
       });
 
@@ -177,7 +174,7 @@ export class OrderService {
     * Restore a soft-deleted order item by its ID.
     * @param orderItemId string - ID of the order item to restore.
     */
-   async restoreOrderItem(orderItemId: string): Promise<void> {
+   async restoreOrderItem(orderItemId: OrderItem['id']): Promise<void> {
       this.orderItemRepository.restore(orderItemId);
    }
    /**
@@ -187,7 +184,7 @@ export class OrderService {
    async restoreOrder(orderId: string): Promise<void> {
       const orderItem = await this.orderItemRepository.find({
          where: {
-            orderId: orderId,
+            order_id: orderId,
          },
       });
       this.orderRepository.restore(orderId);
@@ -204,20 +201,22 @@ export class OrderService {
     * @throws BadRequestException - If provided data is invalid.
     */
    async updateOrder(
-      orderId: string,
+      orderId: Order['id'],
       updateOrderDto: UpdateOrderDto,
    ): Promise<void> {
-      const { orderItems, ...orderDto } = updateOrderDto;
+      const { order_items, ...orderDto } = updateOrderDto;
 
-      // Check if the order exists
       const existingOrder = await this.findOrder(orderId);
-
-      // Update the order
+      if (!existingOrder) {
+         throw new NotFoundException(
+            `Order with ID ${existingOrder.id} not found`,
+         );
+      }
       await this.orderRepository.update(orderId, orderDto);
 
-      if (updateOrderDto.orderItems) {
-         for (const newOrderUpdate of orderItems) {
-            const id = newOrderUpdate.orderItemId;
+      if (updateOrderDto.order_items) {
+         for (const newOrderUpdate of order_items) {
+            const id = newOrderUpdate.order_item_id;
 
             // Check if the order item exists
             const existingOrderItem = await this.findOrder(orderId);
@@ -228,7 +227,7 @@ export class OrderService {
                );
             }
 
-            const { orderItemId, ...orderItemDto } = newOrderUpdate;
+            const { order_item_id, ...orderItemDto } = newOrderUpdate;
 
             // Update the order item
             await this.orderItemRepository.update(id, orderItemDto);

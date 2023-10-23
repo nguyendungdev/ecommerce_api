@@ -6,7 +6,7 @@ import {
    NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { CommonMessage } from 'src/common/constants/messages.constants';
 import * as bcrypt from 'bcrypt';
 import AuthCreadentialsDto from 'src/auth/dto/auth-credentials.dto';
@@ -17,29 +17,48 @@ import { EditUserDto } from './dto/edit-user.dto';
 
 @Injectable()
 export class UserService {
-   constructor(
-      @InjectRepository(User)
-      private readonly usersRepository: UsersRepository,
-   ) {}
-
+   constructor(private readonly usersRepository: UsersRepository) { }
+   /**
+    * Get all users.
+    *
+    * @returns UsersResponseDto - A list of users.
+    */
    async getAll(): Promise<UsersResponseDto> {
       console.log('get all service');
       const users = await this.usersRepository.find({
          where: {
-            deleteAt: null,
+            delete_at: null,
          },
       });
       return { users };
    }
+
+   /**
+    * Get user information by ID.
+    *
+    * @param id string - ID of the user.
+    * @returns UserRespondDto - User information or null if not found.
+    */
    async getById(id: string): Promise<UserRespondDto> {
       const user = await this.usersRepository.findOneById(id);
+      if (!user) {
+         return null;
+      }
       return user;
    }
 
+   /**
+    * Get user information by email.
+    *
+    * @param email string - Email address of the user.
+    * @returns User - User information or null if not found.
+    */
    async getByEmail(email: string): Promise<User> {
       const user = await this.usersRepository.findOne({
          where: {
             email,
+            is_confirmed: true,
+            delete_at: null,
          },
       });
       if (!user) {
@@ -48,6 +67,12 @@ export class UserService {
       return user;
    }
 
+   /**
+    * Get user information by email.
+    *
+    * @param email string - Email address of the user.
+    * @returns object - Role and confirmation status (isConfirmed) of the user or null if not found.
+    */
    async getInfo(email: string) {
       const user = await this.usersRepository.findOne({
          where: {
@@ -59,10 +84,17 @@ export class UserService {
       }
       return {
          roles: user.roles,
-         isConfirmed: user.isConfirmed,
+         isConfirmed: user.is_confirmed,
       };
    }
 
+   /**
+    * Update user information.
+    *
+    * @param id string - ID of the user to be updated.
+    * @param editUserDto EditUserDto - User information updates.
+    * @returns User - User information after the update.
+    */
    async update(id: string, editUserDto: EditUserDto): Promise<User> {
       const { email, password } = editUserDto;
       const existUser = await this.usersRepository.findOneById(id);
@@ -81,6 +113,11 @@ export class UserService {
       return existUser;
    }
 
+   /**
+    * Create a new user.
+    *
+    * @param authCreadentialsDto AuthCreadentialsDto - user registration information.
+    */
    async create(authCreadentialsDto: AuthCreadentialsDto): Promise<void> {
       const { email, password, roles } = authCreadentialsDto;
       if (await this.getByEmail(email)) {
@@ -113,11 +150,17 @@ export class UserService {
       }
    }
 
+   /**
+    * Mark an email as confirmed.
+    *
+    * @param email string - Email address to be marked as confirmed.
+    * @returns UpdateResult - Update result.
+    */
    async markEmailAsConfirmed(email: string) {
       return this.usersRepository.update(
          { email },
          {
-            isConfirmed: true,
+            is_confirmed: true,
          },
       );
    }

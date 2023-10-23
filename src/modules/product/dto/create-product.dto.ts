@@ -1,13 +1,10 @@
-import { OmitType } from '@nestjs/swagger';
 import {
-   IsArray,
    IsInt,
    IsNotEmpty,
    IsNumber,
    IsOptional,
    IsString,
 } from 'class-validator';
-import { Product } from '../product.entity';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateProductDTO {
    @ApiProperty({
@@ -24,7 +21,7 @@ export class CreateProductDTO {
    })
    @IsNumber()
    @IsNotEmpty()
-   basePrice: number;
+   base_price: number;
 
    @ApiProperty({
       example: 0,
@@ -32,7 +29,7 @@ export class CreateProductDTO {
    })
    @IsNumber()
    @IsOptional()
-   discountPercentage: number;
+   discount_percentage: number;
 
    @ApiProperty({
       example: 'img_url',
@@ -40,7 +37,7 @@ export class CreateProductDTO {
    })
    @IsString()
    @IsNotEmpty()
-   imgUrl: string;
+   img_url: string;
 
    @ApiProperty({ example: 30, description: `stock` })
    @IsInt()
@@ -56,10 +53,10 @@ export class CreateProductDTO {
    description: string;
 
    @ApiProperty({
-      example: '574c3d35-0e6f-4141-8e90-f018a803fd59',
+      example: ['574c3d35-0e6f-4141-8e90-f018a803fd59'],
       description: 'The ID of the related category',
    })
    @IsOptional()
    @IsString()
-   categoryId: string;
+   category_id: string[];
 }

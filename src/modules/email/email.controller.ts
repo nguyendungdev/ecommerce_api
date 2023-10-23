@@ -5,12 +5,11 @@ import {
    Post,
    UseGuards,
    Req,
-   Body,
-   Param,
+   Query,
 } from '@nestjs/common';
 import EmailService from './email.service';
 import { AuthGuard } from '@nestjs/passport';
-import ConfirmEmailDto from './dto/confirm-email.dto';
+
 import {
    ApiTags,
    ApiBearerAuth,
@@ -27,9 +26,9 @@ import {
 @Controller('auth/email-confirmation')
 @UseInterceptors(ClassSerializerInterceptor)
 export class EmailController {
-   constructor(private readonly emailService: EmailService) {}
+   constructor(private readonly emailService: EmailService) { }
 
-   @Post('resend-confirmation-link')
+   @Post('')
    @ApiOperation({ summary: 'Resend email confirmation link' })
    @ApiOkResponse({
       description: 'Email confirmation link resent successfully',
@@ -44,7 +43,7 @@ export class EmailController {
       await this.emailService.resendConfirmationLink(request.user.email);
    }
 
-   @Post('/confirm/:id')
+   @Post('/confirm')
    @ApiOperation({ summary: 'Confirm email using token' })
    @ApiOkResponse({
       description: 'Email confirmed successfully',
@@ -58,11 +57,9 @@ export class EmailController {
    @ApiInternalServerErrorResponse({
       description: 'Internal server error',
    })
-   @Post('/confirm/:id')
-   async confirm(@Body() confirmationData: ConfirmEmailDto) {
-      const email = await this.emailService.decodeConfirmationToken(
-         confirmationData.token,
-      );
+   @Post('/confirm')
+   async confirm(@Query('token') token: string) {
+      const email = await this.emailService.decodeConfirmationToken(token);
       await this.emailService.confirmEmail(email);
    }
 }

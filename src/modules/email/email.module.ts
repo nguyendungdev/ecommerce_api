@@ -9,4 +9,4 @@ import { AuthModule } from 'src/auth/auth.module';
    providers: [EmailService],
    exports: [EmailService],
 })
-export class EmailModule { }
+export class EmailModule {}

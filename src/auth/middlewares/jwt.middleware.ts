@@ -22,14 +22,11 @@ export class JwtMiddleware implements NestMiddleware {
             req.user = decodedJwt;
             req.user.isConfirmed = (
                await this.userService.getByEmail(decodedJwt.email)
-            ).isConfirmed;
+            ).is_confirmed;
          } catch (error) {
-            console.error('Failed to verify JWT:', error.message);
-            res.status(401).json({ message: 'Unauthorized' });
             return;
          }
       }
-
       next();
    }
 }

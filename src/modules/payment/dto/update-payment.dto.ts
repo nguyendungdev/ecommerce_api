@@ -16,14 +16,14 @@ export class UpdatePaymentDto {
       PaymentMethod.PURCHASE_ORDER,
    ])
    @IsOptional()
-   paymentMethod: PaymentMethod;
+   payment_method: PaymentMethod;
 
    @ApiProperty({
       example: '86c504ac-9d66-475d-bc14-7bafa79e6737',
       description: 'The ID of the user',
    })
    @IsString()
-   userId: string;
+   user_id: string;
 
    @ApiProperty({
       example: '2023-12-31T23:59:59Z',
@@ -46,5 +46,5 @@ export class UpdatePaymentDto {
    })
    @IsNumber()
    @IsOptional()
-   acountNo: number;
+   acount_no: number;
 }

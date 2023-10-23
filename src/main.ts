@@ -16,11 +16,11 @@ async function bootstrap() {
             : ['log', 'debug', 'error', 'verbose', 'warn'],
    });
    const options = new DocumentBuilder()
-      .setTitle('Ecommerce back-end Template')
+      .setTitle('Back-end Template')
       .setDescription('The Back-end Template API description')
       .setVersion('1.0')
       .addTag('template')
-      .addBearerAuth({ type: 'apiKey', name: 'Authorization', in: 'header' })
+      .addBearerAuth({ type: 'http', name: 'Authorization', in: 'header' })
       .build();
 
    const document = SwaggerModule.createDocument(app, options);
@@ -32,6 +32,7 @@ async function bootstrap() {
    app.useGlobalInterceptors(
       new ClassSerializerInterceptor(app.get(Reflector)),
    );
+
    const port = appConfig.port;
    logger.log(`App is listening on port ${port}`);
    await app.listen(port);

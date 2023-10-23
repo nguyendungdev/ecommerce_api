@@ -10,21 +10,21 @@ export class UpdateInvoiceDto {
    @IsDate()
    @IsOptional()
    @ApiProperty({ example: '2023-07-14', description: 'Invoice date' })
-   invoiceDate: Date;
+   invoice_date: Date;
 
    @IsOptional()
    @IsDate()
    @ApiProperty({ example: '2023-07-21', description: 'Due date' })
-   dueDate: Date;
+   due_date: Date;
 
    @IsDate()
    @IsOptional()
    @ApiProperty({ example: '2023-07-21 12:00:00', description: 'Payment date' })
-   paymentDate: Date;
+   payment_date: Date;
 
    @IsString()
    @IsOptional()
-   orderId: string;
+   order_id: string;
 
    @IsString()
    @IsOptional()
@@ -32,5 +32,5 @@ export class UpdateInvoiceDto {
       example: 'da400369-2342-42c1-980f-17d3519267aa',
       description: `payment's id`,
    })
-   paymentId: string;
+   payment_id: string;
 }
