@@ -11,7 +11,7 @@ import { RolesGuard } from './modules/user/guards/roles.guard';
 import { PaymentModule } from './modules/payment/payment.module';
 import { InvoiceModule } from './modules/invoice/invoice.module';
 import { EmailModule } from './modules/email/email.module';
-import { EmailConfirmationGuard } from './modules/email/guards/emailConfirmation.guard';
+import { ReviewModule } from './modules/review/review.module';
 
 @Module({
    imports: [
@@ -24,6 +24,7 @@ import { EmailConfirmationGuard } from './modules/email/guards/emailConfirmation
       PaymentModule,
       InvoiceModule,
       EmailModule,
+      ReviewModule,
    ],
    controllers: [],
    providers: [
@@ -33,4 +34,4 @@ import { EmailConfirmationGuard } from './modules/email/guards/emailConfirmation
       },
    ],
 })
-export class AppModule { }
+export class AppModule {}

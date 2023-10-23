@@ -14,14 +14,14 @@ export class CreatePaymentDto {
       PaymentMethod.MASTERCARD,
       PaymentMethod.PURCHASE_ORDER,
    ])
-   paymentMethod: PaymentMethod;
+   payment_method: PaymentMethod;
 
    @ApiProperty({
       example: '86c504ac-9d66-475d-bc14-7bafa79e6737',
       description: 'The ID of the user',
    })
    @IsString()
-   userId: string;
+   user_id: string;
 
    @ApiProperty({
       example: '2023-12-31T23:59:59Z',
@@ -41,5 +41,5 @@ export class CreatePaymentDto {
       description: 'The account number',
    })
    @IsNumber()
-   acountNo: number;
+   acount_no: number;
 }

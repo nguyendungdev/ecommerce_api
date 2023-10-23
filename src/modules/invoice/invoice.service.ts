@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InvoiceRepository } from './invoice.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Invoice } from './invoice.entity';
+import { Invoice } from './entities/invoice.entity';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { OrderService } from '../order/order.service';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
@@ -9,7 +9,6 @@ import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 export class InvoiceService {
    constructor(
       private readonly orderService: OrderService,
-      @InjectRepository(Invoice)
       private readonly invoiceRepository: InvoiceRepository,
    ) { }
    /**
@@ -19,17 +18,13 @@ export class InvoiceService {
     * @throws NotFoundException - If no invoices are found for the order.
     */
    async getAllInvoice(id: string): Promise<Invoice[]> {
-      const invoice = await this.invoiceRepository
-         .createQueryBuilder('invoice')
-         // .addSelect('invoice.id', 'invoice_id')
-         .where('invoice.order_id=:id', { id: id })
-         .getMany();
-      if (!invoice || invoice.length === 0) {
+      const invoices = await this.invoiceRepository.getAllByOrderId(id);
+      if (!invoices || invoices.length === 0) {
          throw new NotFoundException(
             `No invoices found for order with ID ${id}`,
          );
       }
-      return invoice;
+      return invoices;
    }
 
    /**
@@ -37,21 +32,20 @@ export class InvoiceService {
     * @param createInvoiceDto CreateInvoiceDto - Data for creating a new invoice.
     */
    async createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<void> {
-      const { number, invoiceDate, dueDate, paymentDate, orderId, paymentId } =
+      const { number, invoice_date, due_date, payment_date, order_id, payment_id } =
          createInvoiceDto;
 
       const invoiceTotal = await this.orderService.getInvoiceTotalPrice(
-         orderId,
+         order_id,
       );
-
       const newInvoice = await this.invoiceRepository.create({
          number,
-         invoiceDate,
-         dueDate,
-         paymentDate,
-         orderId,
-         paymentId,
-         invoiceTotal,
+         invoice_date,
+         due_date,
+         payment_date,
+         order_id,
+         payment_id,
+         invoice_total: invoiceTotal,
       });
       await newInvoice.save();
    }

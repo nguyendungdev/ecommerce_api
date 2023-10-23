@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Payment } from './payment.entity';
+import { Payment } from './entities/payment.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

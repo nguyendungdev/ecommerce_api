@@ -28,7 +28,7 @@ import {
 import { ErrorResponse } from '../../common/dto/response.dto';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { Payment } from './payment.entity';
+import { Payment } from './entities/payment.entity';
 import { DeletePaymentDto } from './dto/delete-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -39,9 +39,9 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('Payment')
 @Controller('payment')
 export class PaymentController {
-   constructor(private readonly paymentService: PaymentService) { }
+   constructor(private readonly paymentService: PaymentService) {}
 
-   @Get('/get/:id')
+   @Get('/:id')
    @ApiOperation({ summary: 'Get all payments by ID' })
    @ApiParam({ name: 'id', type: 'string', description: 'User ID' })
    @ApiOkResponse({
@@ -62,7 +62,7 @@ export class PaymentController {
       return payments;
    }
 
-   @Post('/new')
+   @Post('')
    @ApiOperation({ summary: 'Add new payment' })
    @ApiBody({ type: CreatePaymentDto })
    @ApiCreatedResponse({
@@ -83,7 +83,7 @@ export class PaymentController {
       this.paymentService.addPayment(createPaymentDto);
    }
 
-   @Delete('/delete/')
+   @Delete('')
    @ApiOperation({ summary: 'Delete payment' })
    @ApiBody({ type: DeletePaymentDto })
    @ApiNoContentResponse({
@@ -103,7 +103,7 @@ export class PaymentController {
       this.paymentService.deletePayment(deletePaymentDto);
    }
 
-   @Patch('/update/:id')
+   @Patch('/:id')
    @ApiOperation({ summary: 'Update payment' })
    @ApiParam({ name: 'id', type: 'string', description: 'Payment ID' })
    @ApiBody({ type: UpdatePaymentDto })

@@ -21,7 +21,7 @@ export default class AuthCreadentialsDto {
    @IsOptional()
    @ApiProperty({
       description: 'User roles.',
-      example: ['user', 'admin'],
+      example: ['User', 'Admin'],
    })
    roles: Role[];
 }

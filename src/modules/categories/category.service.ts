@@ -4,31 +4,23 @@ import {
    InternalServerErrorException,
    NotFoundException,
 } from '@nestjs/common';
-import { Category } from './category.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CategorysRepository } from './category.repository';
+import { Category } from './entities/category.entity';
+import { CategoryRepository } from './category.repository';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CommonMessage } from '../../common/constants/messages.constants';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
-   constructor(
-      @InjectRepository(Category)
-      private readonly categoryRepository: CategorysRepository,
-   ) { }
+   constructor(private readonly categoryRepository: CategoryRepository) { }
    /**
     * Get all categories with their associated products.
     * @returns Promise<Category[]> - Array of categories with products.
     * @throws NotFoundException - If no categories are found.
     */
    async getAll() {
-      const category = await this.categoryRepository
-         .createQueryBuilder('category')
-         .addSelect('category')
-         .addSelect('product')
-         .innerJoin('category.products', 'product')
-         .getMany();
+      const category = await this.categoryRepository.getAll();
+
       if (!category) {
          throw new NotFoundException(CommonMessage.NOT_FOUND_BY_ID);
       }
@@ -41,8 +33,7 @@ export class CategoryService {
     * @returns Promise<Category | null> - The found category or null if not found.
     */
    async getByName(name: string): Promise<Category | null> {
-      const category = await this.categoryRepository.findOneBy({ name });
-
+      const category = await this.categoryRepository.getByName(name);
       return category || null;
    }
 
@@ -51,7 +42,7 @@ export class CategoryService {
     * @param id string - ID of the category.
     * @throws NotFoundException - If the category is not found.
     */
-   async delete(id: string): Promise<void> {
+   async delete(id: Category['id']): Promise<void> {
       const result = await this.categoryRepository.softDelete(id);
 
       if (result.affected === 0) {
@@ -73,7 +64,7 @@ export class CategoryService {
     * @param updateCategoryDto UpdateCategoryDto - Data to update the category.
     */
    async update(
-      id: string,
+      id: Category['id'],
       updateCategoryDto: UpdateCategoryDto,
    ): Promise<void> {
       await this.categoryRepository.update(id, updateCategoryDto);
@@ -90,10 +81,9 @@ export class CategoryService {
       if (!this.getByName(name)) {
          throw new ConflictException(`Category ${CommonMessage.ALREADY_EXIST}`);
       }
-      const newCategory = this.categoryRepository.create();
+      const newCategory = this.categoryRepository.create(createCategoryDto);
       newCategory.name = name;
       newCategory.description = description;
-
       try {
          await newCategory.save();
       } catch (error) {

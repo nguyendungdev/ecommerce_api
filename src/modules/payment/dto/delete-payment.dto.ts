@@ -6,7 +6,7 @@ export class DeletePaymentDto {
       description: 'The ID of the user',
    })
    @IsString()
-   userId: string;
+   user_id: string;
 
    @ApiProperty({
       example: 'd7e98d89-bcf9-4362-9c02-8940454eddf6',

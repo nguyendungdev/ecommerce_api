@@ -27,14 +27,13 @@ import { AuthDescription, AuthSummary } from './auth.constants';
 import { CommonDescription } from '../common/constants/descriptions.constants';
 import TokenResponseDto from './dto/token-response.dto';
 import { ErrorResponse } from '../common/dto/response.dto';
-import { User } from '../modules/user/user.entity';
+import { User } from '../modules/user/entities/user.entity';
 import { CustomRequest } from '../common/interface/custom-request.interface';
-import { EmailConfirmationGuard } from '../modules/email/guards/emailConfirmation.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-   constructor(private readonly authService: AuthService) { }
+   constructor(private readonly authService: AuthService) {}
 
    @Post('/signup')
    @HttpCode(HttpStatus.CREATED)
@@ -59,7 +58,6 @@ export class AuthController {
    }
 
    @Post('/signin')
-   @UseGuards(EmailConfirmationGuard)
    @HttpCode(HttpStatus.OK)
    @ApiOperation({ summary: AuthSummary.SIGN_IN_SUMMARY })
    @ApiBody({ type: AuthCreadentialsDto })
