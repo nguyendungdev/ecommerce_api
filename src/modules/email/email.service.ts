@@ -46,7 +46,7 @@ export default class EmailService {
     */
    async confirmEmail(email: string) {
       const user = await this.userService.getByEmail(email);
-      if (user.isConfirmed) {
+      if (user.is_confirmed) {
          throw new BadRequestException('Email already confirmed');
       }
       await this.userService.markEmailAsConfirmed(email);
@@ -82,7 +82,7 @@ export default class EmailService {
     */
    public async resendConfirmationLink(email: string) {
       const user = await this.userService.getByEmail(email);
-      if (user.isConfirmed) {
+      if (user.is_confirmed) {
          throw new BadRequestException('Email already confirmed');
       }
       await this.authService.sendVerificationLink(email);
