@@ -9,7 +9,6 @@ export class ProductRepository extends Repository<Product> {
       super(Product, dataSource.createEntityManager());
    }
 
-
    async getPriceById(productId: Product['id']): Promise<number> {
       const product = this.manager.query(`
          select base_price - product.base_price * product.discount_percentage as total_price

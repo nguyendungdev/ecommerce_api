@@ -34,7 +34,7 @@ import { CreateReviewDTO } from './dto/create-review.dto';
 @UseGuards(AuthGuard('jwt'))
 @Controller('Review')
 export class ReviewController {
-   constructor(private readonly reviewService: ReviewService) { }
+   constructor(private readonly reviewService: ReviewService) {}
 
    @Get('/')
    @ApiOperation({

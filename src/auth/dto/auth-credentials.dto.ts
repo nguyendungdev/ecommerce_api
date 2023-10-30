@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { Role } from '../../modules//user/roles.enum';
+import { Role } from '../../modules//users/roles.enum';
 
 export default class AuthCreadentialsDto {
    @IsNotEmpty()

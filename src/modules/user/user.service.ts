@@ -17,7 +17,7 @@ import { EditUserDto } from './dto/edit-user.dto';
 
 @Injectable()
 export class UserService {
-   constructor(private readonly usersRepository: UsersRepository) { }
+   constructor(private readonly usersRepository: UsersRepository) {}
    /**
     * Get all users.
     *

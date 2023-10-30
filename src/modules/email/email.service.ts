@@ -8,7 +8,7 @@ import { createTransport } from 'nodemailer';
 import * as Mail from 'nodemailer/lib/mailer';
 import { JwtService } from '@nestjs/jwt';
 import { emailConfirm } from '../../configs/configs.constants';
-import { UserService } from '../user/user.service';
+import { UserService } from '../users/user.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Injectable()

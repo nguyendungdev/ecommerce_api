@@ -14,4 +14,5 @@ export enum AuthDescription {
 export enum AuthSummary {
    SIGN_UP_SUMMARY = 'Sign up for users.',
    SIGN_IN_SUMMARY = 'Sign in for users.',
+   FAST_SIGN_UP_SUMMARY = 'Sign up for users with out confirm email step.',
 }

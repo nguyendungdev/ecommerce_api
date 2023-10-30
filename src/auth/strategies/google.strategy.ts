@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PassportModule, PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { UserService } from '../../modules/user/user.service';
+import { UserService } from '../../modules/users/user.service';
 import { appConfig, googleConfig } from '../../configs/configs.constants';
 import JwtPayload from '../payloads/jwtPayload';
-import { Role } from '../../modules/user/roles.enum';
+import { Role } from '../../modules/users/roles.enum';
 import EmailService from '../../modules/email/email.service';
 
 @Injectable()

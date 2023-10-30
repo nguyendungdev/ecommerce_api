@@ -19,6 +19,9 @@ import {
    ApiOkResponse,
    ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { EmailDescription, EmailSummary } from './email.constants';
+import { CommonDescription } from '../../common/constants/descriptions.constants';
+import { ErrorResponse } from '../../common/dto/response.dto';
 
 @ApiTags('Email Confirmation')
 @ApiBearerAuth()
@@ -26,36 +29,42 @@ import {
 @Controller('auth/email-confirmation')
 @UseInterceptors(ClassSerializerInterceptor)
 export class EmailController {
-   constructor(private readonly emailService: EmailService) { }
+   constructor(private readonly emailService: EmailService) {}
 
    @Post('')
-   @ApiOperation({ summary: 'Resend email confirmation link' })
+   @ApiOperation({ summary: EmailSummary.RESEND_CONFIRMATION_LINK })
    @ApiOkResponse({
-      description: 'Email confirmation link resent successfully',
+      description: EmailDescription.RESEND_CONFIRMATION_LINK_SUCCESS,
    })
    @ApiBadRequestResponse({
-      description: 'Bad request',
+      description: CommonDescription.BAD_REQUEST,
+      type: ErrorResponse,
+   })
+   @ApiUnauthorizedResponse({
+      description: CommonDescription.UNAUTHORIZED,
+      type: ErrorResponse,
    })
    @ApiInternalServerErrorResponse({
-      description: 'Internal server error',
+      description: CommonDescription.INTERNAL_SERVER_ERROR,
+      type: ErrorResponse,
    })
    async resendConfirmationLink(@Req() request) {
       await this.emailService.resendConfirmationLink(request.user.email);
    }
 
    @Post('/confirm')
-   @ApiOperation({ summary: 'Confirm email using token' })
+   @ApiOperation({ summary: EmailSummary.CONFIRM_EMAIL })
    @ApiOkResponse({
-      description: 'Email confirmed successfully',
+      description: EmailDescription.CONFIRM_EMAIL_SUCCESS,
    })
    @ApiBadRequestResponse({
-      description: 'Bad request',
+      description: CommonDescription.BAD_REQUEST,
    })
    @ApiUnauthorizedResponse({
-      description: 'Unauthorized',
+      description: CommonDescription.UNAUTHORIZED,
    })
    @ApiInternalServerErrorResponse({
-      description: 'Internal server error',
+      description: CommonDescription.INTERNAL_SERVER_ERROR,
    })
    @Post('/confirm')
    async confirm(@Query('token') token: string) {

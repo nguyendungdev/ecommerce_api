@@ -3,7 +3,7 @@ import { IsOptional, IsString } from 'class-validator';
 export class CreateCategoryDto {
    @ApiProperty({
       description: `Category's name`,
-      example: `Laptop`,
+      example: `Example category's name`,
    })
    @IsOptional()
    @IsString()
@@ -11,7 +11,7 @@ export class CreateCategoryDto {
 
    @ApiProperty({
       description: `Category's description`,
-      example: ``,
+      example: `Example category's description`,
    })
    @IsOptional()
    @IsString()

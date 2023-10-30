@@ -12,7 +12,7 @@ export class EmailConfirmationGuard implements CanActivate {
       const request = context.switchToHttp().getRequest();
       const email = request.user.email;
       const user = await this.userService.getByEmail(email);
-      if (!user || !user.isConfirmed) {
+      if (!user || !user.is_confirmed) {
          return false;
       }
       return true;

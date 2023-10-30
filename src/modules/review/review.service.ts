@@ -11,7 +11,7 @@ export class ReviewService {
    constructor(
       private readonly reviewRepository: ReviewRepository,
       private readonly productService: ProductService,
-   ) { }
+   ) {}
    async create(createReviewDto: CreateReviewDTO): Promise<void> {
       const newReview = await this.reviewRepository.create(createReviewDto);
       await this.reviewRepository.save(newReview);

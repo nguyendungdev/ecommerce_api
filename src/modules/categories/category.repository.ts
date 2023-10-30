@@ -8,18 +8,18 @@ export class CategoryRepository extends Repository<Category> {
       super(Category, dataSource.createEntityManager());
    }
 
-   async getAll() {
-      const categories = await this.query(`select * from category`);
-      return categories;
-   }
+   // async getAll() {
+   //    const categories = await this.query(`select * from category`);
+   //    return categories;
+   // }
 
-   async getByName(name: string) {
-      const category = await this.query(
-         `select * from category 
-         where name = '${name}' 
-         and delete_at is null
-         limit 1;`,
-      );
-      return category;
-   }
+   // async getByName(name: string) {
+   //    const category = await this.query(
+   //       `select * from category
+   //       where name = '${name}'
+   //       and delete_at is null
+   //       limit 1;`,
+   //    );
+   //    return category;
+   // }
 }

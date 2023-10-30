@@ -4,8 +4,8 @@ import AuthCreadentialsDto from './dto/auth-credentials.dto';
 import JwtPayload from './payloads/jwtPayload';
 import { AuthMessage } from './auth.constants';
 import TokenResponseDto from './dto/token-response.dto';
-import { UserService } from '../modules/user/user.service';
-import { User } from '../modules/user/entities/user.entity';
+import { UserService } from '../modules/users/user.service';
+import { User } from '../modules/users/entities/user.entity';
 import { emailConfirm } from '../configs/configs.constants';
 import EmailService from '../modules/email/email.service';
 import EmailConfirmPayload from './payloads/EmailCheckPayload';
@@ -17,9 +17,10 @@ export class AuthService {
       private readonly usersService: UserService,
       private readonly jwtService: JwtService,
       private readonly emailService: EmailService,
-   ) { }
+   ) {}
 
    /**
+    *
     * Sign up a user.
     * @param authCredentialsDto AuthCredentialDto - User's authentication credentials.
     * @returns Promise<TokenResponseDto> - Object containing the JWT access token.
@@ -33,11 +34,31 @@ export class AuthService {
       };
       await this.usersService.create(authCredentialsDto);
       const jwtAccessToken = await this.jwtService.signAsync(payload);
-      //  await this.sendVerificationLink(payload.email);
+      await this.sendVerificationLink(payload.email);
       return { jwtAccessToken };
    }
 
    /**
+    *
+    * Sign up a user without confirm email step.
+    * @param authCredentialsDto AuthCredentialDto - User's authentication credentials.
+    * @returns Promise<TokenResponseDto> - Object containing the JWT access token.
+    */
+   async fastSignUp(
+      authCredentialsDto: AuthCreadentialsDto,
+   ): Promise<TokenResponseDto> {
+      const payload: JwtPayload = {
+         email: authCredentialsDto.email,
+         roles: authCredentialsDto.roles,
+      };
+      await this.usersService.create(authCredentialsDto);
+      const jwtAccessToken = await this.jwtService.signAsync(payload);
+      await this.usersService.markEmailAsConfirmed(authCredentialsDto.email);
+      return { jwtAccessToken };
+   }
+
+   /**
+    *
     * Send a verification link to the provided email address.
     * @param email string - User's email address.
     */
@@ -59,6 +80,7 @@ export class AuthService {
    }
 
    /**
+    *
     * Sign in a user with provided authentication credentials.
     * @param authCredentialsDto AuthCredentialsDto - User's authentication credentials.
     * @returns Promise<TokenResponseDto> - Object containing the JWT access token.

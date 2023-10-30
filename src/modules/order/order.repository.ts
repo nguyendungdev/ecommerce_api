@@ -30,5 +30,4 @@ export class OrderRepository extends Repository<Order> {
             limit 1;`);
       return order;
    }
-
 }

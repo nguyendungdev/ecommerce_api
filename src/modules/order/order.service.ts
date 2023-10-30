@@ -17,7 +17,7 @@ export class OrderService {
       private readonly orderItemRepository: OrderItemRepository,
       private readonly productService: ProductService,
       private readonly userService: UserService,
-   ) { }
+   ) {}
 
    /**
     * Find orders for a specific user.
@@ -118,8 +118,14 @@ export class OrderService {
     * @param createOrderDto CreateOrderDto - Data to create a new order.
     */
    async createOrder(createOrderDto: CreateOrderDto): Promise<void> {
-      const { order_date, status, shipment_date, comment, shipped_to, user_id } =
-         createOrderDto;
+      const {
+         order_date,
+         status,
+         shipment_date,
+         comment,
+         shipped_to,
+         user_id,
+      } = createOrderDto;
       const newOrder = await this.orderRepository.create();
       newOrder.comment = comment;
       newOrder.order_date = order_date;

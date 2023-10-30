@@ -1,8 +1,4 @@
-import {
-   Injectable,
-   HttpException,
-   NotFoundException,
-} from '@nestjs/common';
+import { Injectable, HttpException, NotFoundException } from '@nestjs/common';
 import { Product } from './entities/product.entity';
 import { ProductRepository } from './product.repository';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -15,7 +11,7 @@ export class ProductService {
    constructor(
       private readonly productRepository: ProductRepository,
       private readonly categoryProductRepository: CategoryProductRepository,
-   ) { }
+   ) {}
 
    /**
     * Format a product name into a URL-friendly format.
@@ -149,8 +145,10 @@ export class ProductService {
       await this.productRepository.updateNewReview(id, point);
    }
 
-   async update(id: Product['id'], updateProductDTO: UpdateProductDTO): Promise<void> {
-      await this.productRepository.update(id, updateProductDTO)
+   async update(
+      id: Product['id'],
+      updateProductDTO: UpdateProductDTO,
+   ): Promise<void> {
+      await this.productRepository.update(id, updateProductDTO);
    }
-
 }
