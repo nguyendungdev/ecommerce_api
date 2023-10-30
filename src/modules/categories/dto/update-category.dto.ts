@@ -4,14 +4,14 @@ import { IsOptional, IsString } from 'class-validator';
 export class UpdateCategoryDto {
    @ApiProperty({
       description: `Category's name`,
-      example: `Laptop`,
+      example: `Example category's name`,
    })
    @IsOptional()
    @IsString()
    name: string;
 
    @ApiProperty({
-      description: `Category's description`,
+      description: `Example category's description`,
       example: ``,
    })
    @IsOptional()

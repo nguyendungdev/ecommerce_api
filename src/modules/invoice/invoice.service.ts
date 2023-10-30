@@ -10,7 +10,7 @@ export class InvoiceService {
    constructor(
       private readonly orderService: OrderService,
       private readonly invoiceRepository: InvoiceRepository,
-   ) { }
+   ) {}
    /**
     * Get all invoices for a specific order.
     * @param id string - ID of the order.
@@ -32,8 +32,14 @@ export class InvoiceService {
     * @param createInvoiceDto CreateInvoiceDto - Data for creating a new invoice.
     */
    async createInvoice(createInvoiceDto: CreateInvoiceDto): Promise<void> {
-      const { number, invoice_date, due_date, payment_date, order_id, payment_id } =
-         createInvoiceDto;
+      const {
+         number,
+         invoice_date,
+         due_date,
+         payment_date,
+         order_id,
+         payment_id,
+      } = createInvoiceDto;
 
       const invoiceTotal = await this.orderService.getInvoiceTotalPrice(
          order_id,

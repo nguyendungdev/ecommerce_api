@@ -1,7 +1,17 @@
 version: '3.1'
 
 services:
-  ecommerce:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: yuki
+      POSTGRES_PASSWORD: 1
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+  api:
     build:
       dockerfile: dockerfile
       context: .
@@ -13,3 +23,5 @@ services:
       DB_NAME: ecommerce
     ports:
       - "3000:3000"
+volumes:
+  pg_data:

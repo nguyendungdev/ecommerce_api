@@ -12,10 +12,10 @@ export class PaymentService {
    constructor(
       @InjectRepository(Payment)
       private readonly paymentRepository: PaymentRepository,
-   ) { }
+   ) {}
    /**
     * Create a new payment.
-    * 
+    *
     * @param createPaymentDto CreatePaymentDto - Data for creating a new payment.
     */
    async addPayment(createPaymentDto: CreatePaymentDto): Promise<void> {
@@ -34,7 +34,7 @@ export class PaymentService {
 
    /**
     * Update a payment by its ID.
-    * 
+    *
     * @param id string - Payment ID.
     * @param updatePaymentDto UpdatePaymentDto - Data for updating the payment.
     */
@@ -47,7 +47,7 @@ export class PaymentService {
 
    /**
     * Find all payments for a specific user.
-    * 
+    *
     * @param userId string - ID of the user.
     * @returns Promise<Payment[]> - Array of Payment objects.
     * @throws NotFoundException - If no payments are found for the user.
@@ -64,7 +64,7 @@ export class PaymentService {
 
    /**
     * Find a payment by its ID.
-    * 
+    *
     * @param id string - Payment ID.
     * @returns Promise<Payment> - Payment object if found.
     */
@@ -80,7 +80,7 @@ export class PaymentService {
 
    /**
     * Delete a payment.
-    * 
+    *
     * @param deletePaymentDto DeletePaymentDto - Data for deleting a payment.
     * @throws NotFoundException - If the payment is not found.
     */

@@ -27,13 +27,35 @@ import { AuthDescription, AuthSummary } from './auth.constants';
 import { CommonDescription } from '../common/constants/descriptions.constants';
 import TokenResponseDto from './dto/token-response.dto';
 import { ErrorResponse } from '../common/dto/response.dto';
-import { User } from '../modules/user/entities/user.entity';
+import { User } from '../modules/users/entities/user.entity';
 import { CustomRequest } from '../common/interface/custom-request.interface';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
    constructor(private readonly authService: AuthService) {}
+
+   @Post('/fastsignup')
+   @HttpCode(HttpStatus.CREATED)
+   @ApiOperation({ summary: AuthSummary.FAST_SIGN_UP_SUMMARY })
+   @ApiBody({ type: AuthCreadentialsDto })
+   @ApiCreatedResponse({
+      description: AuthDescription.SIGN_UP_SUCCESS,
+      type: TokenResponseDto,
+   })
+   @ApiConflictResponse({
+      description: AuthDescription.EMAIL_EXIST,
+      type: ErrorResponse,
+   })
+   @ApiInternalServerErrorResponse({
+      description: CommonDescription.INTERNAL_SERVER_ERROR,
+      type: ErrorResponse,
+   })
+   async fastSignUp(
+      @Body(ValidationPipe) authCredentialsDto: AuthCreadentialsDto,
+   ): Promise<TokenResponseDto> {
+      return this.authService.fastSignUp(authCredentialsDto);
+   }
 
    @Post('/signup')
    @HttpCode(HttpStatus.CREATED)
