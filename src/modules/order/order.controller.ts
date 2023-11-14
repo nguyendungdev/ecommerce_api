@@ -39,7 +39,7 @@ import { CommonSummary } from 'src/common/constants/summary.constants';
 @UseGuards(AuthGuard('jwt'))
 @ApiTags('order')
 export class OrderController {
-   constructor(private readonly orderService: OrderService) { }
+   constructor(private readonly orderService: OrderService) {}
 
    @Get('/get/:id')
    @HttpCode(HttpStatus.OK)

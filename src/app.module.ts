@@ -33,4 +33,4 @@ import { EmailConfirmationGuard } from './modules/email/guards/emailConfirmation
       },
    ],
 })
-export class AppModule { }
+export class AppModule {}

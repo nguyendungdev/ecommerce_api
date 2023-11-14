@@ -34,7 +34,7 @@ import { EmailConfirmationGuard } from '../email/guards/emailConfirmation.guard'
 @Controller('user')
 @Roles(Role.Admin)
 export class UserController {
-   constructor(private readonly userService: UserService) { }
+   constructor(private readonly userService: UserService) {}
 
    @Get('')
    @HttpCode(HttpStatus.OK)

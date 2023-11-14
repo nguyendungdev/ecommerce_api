@@ -16,7 +16,7 @@ export class CategoryService {
    constructor(
       @InjectRepository(Category)
       private readonly categoryRepository: CategorysRepository,
-   ) { }
+   ) {}
    /**
     * Get all categories with their associated products.
     * @returns Promise<Category[]> - Array of categories with products.

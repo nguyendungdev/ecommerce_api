@@ -3,7 +3,7 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateCategoryDto {
    @ApiProperty({
-      description: `Category's name`,
+      description: `Category's name `,
       example: `Laptop`,
    })
    @IsOptional()

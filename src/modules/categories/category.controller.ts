@@ -38,7 +38,7 @@ import { CommonSummary } from 'src/common/constants/summary.constants';
 @UseGuards(AuthGuard('jwt'))
 @Controller('Category')
 export class CategoryController {
-   constructor(private readonly categoryService: CategoryService) { }
+   constructor(private readonly categoryService: CategoryService) {}
 
    @Get('')
    @HttpCode(HttpStatus.OK)

@@ -17,7 +17,7 @@ export class OrderService {
       @InjectRepository(OrderItem)
       private readonly orderItemRepository: OrderItemRepository,
       private readonly productService: ProductService,
-   ) { }
+   ) {}
 
    /**
     * Find orders for a specific user.

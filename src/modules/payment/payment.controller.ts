@@ -39,7 +39,7 @@ import { AuthGuard } from '@nestjs/passport';
 @Controller('Payment')
 @Controller('payment')
 export class PaymentController {
-   constructor(private readonly paymentService: PaymentService) { }
+   constructor(private readonly paymentService: PaymentService) {}
 
    @Get('/get/:id')
    @ApiOperation({ summary: 'Get all payments by ID' })

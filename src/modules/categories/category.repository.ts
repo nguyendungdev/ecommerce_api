@@ -5,4 +5,4 @@ import { Injectable } from '@nestjs/common';
 import { Category } from './category.entity';
 
 @Injectable()
-export class CategorysRepository extends Repository<Category> { }
+export class CategorysRepository extends Repository<Category> {}

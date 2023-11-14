@@ -34,7 +34,7 @@ import { AuthGuard } from '@nestjs/passport';
 @UseGuards(AuthGuard('jwt'))
 @Controller('Product')
 export class ProductController {
-   constructor(private readonly productService: ProductService) { }
+   constructor(private readonly productService: ProductService) {}
 
    @Get('/all')
    @ApiOperation({ summary: 'Get all products' })

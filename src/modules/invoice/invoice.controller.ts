@@ -35,7 +35,7 @@ import { CommonDescription } from 'src/common/constants/descriptions.constants';
 @UseGuards(AuthGuard('jwt'))
 @ApiTags('invoice')
 export class InvoiceController {
-   constructor(private readonly invoiceService: InvoiceService) { }
+   constructor(private readonly invoiceService: InvoiceService) {}
 
    @Get('/:id')
    @HttpCode(HttpStatus.OK)

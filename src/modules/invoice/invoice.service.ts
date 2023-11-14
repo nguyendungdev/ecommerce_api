@@ -11,7 +11,7 @@ export class InvoiceService {
       private readonly orderService: OrderService,
       @InjectRepository(Invoice)
       private readonly invoiceRepository: InvoiceRepository,
-   ) { }
+   ) {}
    /**
     * Get all invoices for a specific order.
     * @param id string - ID of the order.

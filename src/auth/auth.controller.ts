@@ -34,7 +34,7 @@ import { EmailConfirmationGuard } from '../modules/email/guards/emailConfirmatio
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-   constructor(private readonly authService: AuthService) { }
+   constructor(private readonly authService: AuthService) {}
 
    @Post('/signup')
    @HttpCode(HttpStatus.CREATED)

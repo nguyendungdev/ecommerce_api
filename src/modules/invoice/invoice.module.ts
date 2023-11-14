@@ -12,4 +12,4 @@ import { OrderModule } from '../order/order.module';
    providers: [InvoiceService, InvoiceRepository],
    exports: [InvoiceService],
 })
-export class InvoiceModule { }
+export class InvoiceModule {}

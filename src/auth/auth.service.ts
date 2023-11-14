@@ -17,7 +17,7 @@ export class AuthService {
       private readonly usersService: UserService,
       private readonly jwtService: JwtService,
       private readonly emailService: EmailService,
-   ) { }
+   ) {}
 
    /**
     * Sign up a user.
