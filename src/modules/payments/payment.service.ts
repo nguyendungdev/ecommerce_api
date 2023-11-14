@@ -7,92 +7,63 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 
 @Injectable()
 export class PaymentService {
-   constructor(private readonly paymentRepository: PaymentRepository) {}
-   /**
-    * Create a new payment.
-    *
-    * @param createPaymentDto CreatePaymentDto - Data for creating a new payment.
-    */
-   async addPayment(createPaymentDto: CreatePaymentDto): Promise<void> {
-      const { payment_method, user_id, expiry, prodiver, acount_no } =
-         createPaymentDto;
-      const newPayments = this.paymentRepository.create({
-         payment_method,
-         acount_no,
-         expiry,
-         prodiver,
-         user_id,
-      });
+  constructor(private readonly paymentRepository: PaymentRepository) {}
 
-      await newPayments.save();
-   }
+  async addPayment(createPaymentDto: CreatePaymentDto): Promise<void> {
+    const { payment_method, user_id, expiry, prodiver, acount_no } =
+      createPaymentDto;
+    const newPayments = this.paymentRepository.create({
+      payment_method,
+      acount_no,
+      expiry,
+      prodiver,
+      user_id,
+    });
 
-   /**
-    * Update a payment by its ID.
-    *
-    * @param id string - Payment ID.
-    * @param updatePaymentDto UpdatePaymentDto - Data for updating the payment.
-    */
-   async updatePayments(
-      id: string,
-      updatePaymentDto: UpdatePaymentDto,
-   ): Promise<void> {
-      await this.paymentRepository.update(id, updatePaymentDto);
-   }
+    await newPayments.save();
+  }
 
-   /**
-    * Find all payments for a specific user.
-    *
-    * @param userId string - ID of the user.
-    * @returns Promise<Payment[]> - Array of Payment objects.
-    * @throws NotFoundException - If no payments are found for the user.
-    */
-   async findPayments(userId: string): Promise<Payment[]> {
-      const payments = await this.paymentRepository.findBy({
-         user_id: userId,
-      });
-      if (!payments || payments.length === 0) {
-         throw new NotFoundException(`User has no payment`);
-      }
-      return payments;
-   }
+  async updatePayments(
+    id: string,
+    updatePaymentDto: UpdatePaymentDto,
+  ): Promise<void> {
+    await this.paymentRepository.update(id, updatePaymentDto);
+  }
 
-   /**
-    * Find a payment by its ID.
-    *
-    * @param id string - Payment ID.
-    * @returns Promise<Payment> - Payment object if found.
-    */
-   async findPayment(id: string): Promise<Payment> {
-      const payment = await this.paymentRepository.findOneBy({
-         id: id,
-      });
-      if (!payment) {
-         throw new NotFoundException(`Payment with ID ${id} not found`);
-      }
-      return payment;
-   }
+  async findPayments(userId: string): Promise<Payment[]> {
+    const payments = await this.paymentRepository.findBy({
+      user_id: userId,
+    });
+    if (!payments || payments.length === 0) {
+      throw new NotFoundException(`User has no payment`);
+    }
+    return payments;
+  }
 
-   /**
-    * Delete a payment.
-    *
-    * @param deletePaymentDto DeletePaymentDto - Data for deleting a payment.
-    * @throws NotFoundException - If the payment is not found.
-    */
-   async deletePayment(deletePaymentDto: DeletePaymentDto): Promise<void> {
-      const result = await this.paymentRepository
-         .createQueryBuilder('payment')
-         .softDelete()
-         .from(Payment)
-         .where('id = :id AND user_id = :userId', {
-            id: deletePaymentDto.id,
-            user_id: deletePaymentDto.user_id,
-         })
-         .execute();
-      if (result.affected === 0) {
-         throw new NotFoundException(
-            `Payment with id ${deletePaymentDto.id} not found!!`,
-         );
-      }
-   }
+  async findPayment(id: string): Promise<Payment> {
+    const payment = await this.paymentRepository.findOneBy({
+      id: id,
+    });
+    if (!payment) {
+      throw new NotFoundException(`Payment with ID ${id} not found`);
+    }
+    return payment;
+  }
+
+  async deletePayment(deletePaymentDto: DeletePaymentDto): Promise<void> {
+    const result = await this.paymentRepository
+      .createQueryBuilder('payment')
+      .softDelete()
+      .from(Payment)
+      .where('id = :id AND user_id = :userId', {
+        id: deletePaymentDto.id,
+        user_id: deletePaymentDto.user_id,
+      })
+      .execute();
+    if (result.affected === 0) {
+      throw new NotFoundException(
+        `Payment with id ${deletePaymentDto.id} not found!!`,
+      );
+    }
+  }
 }

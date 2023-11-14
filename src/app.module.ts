@@ -1,37 +1,42 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductModule } from './modules/products/product.module';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './modules/users/user.module';
-import { TypeOrmConfig } from './configs/database/typeorm.config';
-import { CategoryModule } from './modules/categories/category.module';
-import { OrderModule } from './modules/orders/order.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './modules/users/guards/roles.guard';
-import { PaymentModule } from './modules/payments/payment.module';
-import { InvoiceModule } from './modules/invoices/invoice.module';
-import { EmailModule } from './modules/email/email.module';
-import { ReviewModule } from './modules/reviews/review.module';
-
+import { ProductModule } from '@products/product.module';
+import { AuthModule } from '@auth/auth.module';
+import { UserModule } from '@users/user.module';
+import { TypeOrmConfig } from '@configs/database/typeorm.config';
+import { CategoryModule } from '@categories/category.module';
+import { OrderModule } from '@orders/order.module';
+import { PaymentModule } from '@payments/payment.module';
+import { InvoiceModule } from '@invoices/invoice.module';
+import { EmailModule } from '@email/email.module';
+import { ReviewModule } from '@reviews/review.module';
+import { ForgotModule } from '@forgot/forgot.module';
+import { SessionModule } from '@sessions/session.module';
+import { OrderItemModule } from '@order-item/order-item.module';
+import { CategoryProductModule } from '@category-product/category-product.module';
+import LogsMiddleware from '@common/middlewares/logs.middleware';
 @Module({
-   imports: [
-      TypeOrmModule.forRoot(TypeOrmConfig),
-      ProductModule,
-      AuthModule,
-      UserModule,
-      CategoryModule,
-      OrderModule,
-      PaymentModule,
-      InvoiceModule,
-      EmailModule,
-      ReviewModule,
-   ],
-   controllers: [],
-   providers: [
-      {
-         provide: APP_GUARD,
-         useClass: RolesGuard,
-      },
-   ],
+  imports: [
+    TypeOrmModule.forRoot(TypeOrmConfig),
+    AuthModule,
+    EmailModule,
+    UserModule,
+    PaymentModule,
+    CategoryModule,
+    ProductModule,
+    OrderModule,
+    InvoiceModule,
+    ReviewModule,
+    ForgotModule,
+    SessionModule,
+    CategoryProductModule,
+    OrderItemModule,
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LogsMiddleware)
+      .forRoutes('*');
+  }
+}

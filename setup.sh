@@ -6,7 +6,7 @@ docker-compose up -d
 cd ./db/
 
 # Variables
-DB_CONTAINER_NAME="ecommerce_api-db-1"    
+DB_CONTAINER_NAME="ecommerce_api-postgres-1"    
 DB_USER="yuki"                 
 DB_NAME="ecommerce"            
 SQL_FILE="001-init-db.sql"      
@@ -22,7 +22,6 @@ docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" < "$SQL_FIL
 
 docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" < "$SQL_CREATEINDEX"
 
-# docker exec -i "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" < "$SQL_INSERT_DATA"
-docker exec -it "$DB_CONTAINER_NAME" psql -U "$DB_USER" -l
+cd ..
 
-docker exec -it "$DB_CONTAINER_NAME" psql -U "$DB_USER" -d "$DB_NAME" -c "\dt"
+npm run seed:run

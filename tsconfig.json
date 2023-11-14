@@ -9,13 +9,61 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "@users/*": [
+        "./src/modules/users/*"
+      ],
+      "@categories/*": [
+        "./src/modules/categories/*"
+      ],
+      "@sessions/*": [
+        "./src/modules/sessions/*"
+      ],
+      "@orders/*": [
+        "./src/modules/orders/*"
+      ],
+      "@invoices/*": [
+        "./src/modules/invoices/*"
+      ],
+      "@payments/*": [
+        "./src/modules/payments/*"
+      ],
+      "@products/*": [
+        "./src/modules/products/*"
+      ],
+      "@reviews/*": [
+        "./src/modules/reviews/*"
+      ],
+      "@email/*": [
+        "./src/modules/email/*"
+      ],
+      "@forgot/*": [
+        "./src/modules/forgot/*"
+      ],
+      "@order-item/*": [
+        "./src/modules/order-item/*"
+      ],
+      "@category-product/*": [
+        "./src/modules/category-product/*"
+      ],
+      "@common/*": [
+        "./src/common/*"
+      ],
+      "@configs/*": [
+        "./src/configs/*"
+      ],
+      "@auth/*": [
+        "./src/auth/*"
+      ]
+    }
+  },
 }

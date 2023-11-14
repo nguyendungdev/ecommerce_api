@@ -18,9 +18,7 @@ This is a main goals of this repository:
 |   |   +-- constants // Common constants.
 |   |   +-- decorators // Common decorators.
 |   |   +-- interceptors // Common interceptors.
-|   |   +-- response // General response definition.
-|   |   +-- serializers // Common serializers.
-|   |   +-- decorators // Custom decorators
+|   |   +-- types // Custom types
 |   +-- configs // Configurations folder.
 |   |   +-- app // Application config.
 |   |   +-- database // Database config.
@@ -36,6 +34,9 @@ This is a main goals of this repository:
 |   |   +-- email // Email module
 |   |   +-- invoices // Invoice module
 |   |   +-- orders // Order module
+|   |   +-- order-item // Order-item module
+|   |   +-- sessions // Session module
+|   |   +-- forgot  // forgot module
 |   |   +-- payments // Payment module
 |   |   +-- products // Product module
 |   |   +-- reviews// Review module
@@ -76,6 +77,9 @@ $  bash setup.sh
 ## Running the app
 
 ```bash
+# run seed 
+$ npm run seed:run
+
 # development
 $ npm run start
 
@@ -84,6 +88,7 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
 ```
 
 ## Documentation

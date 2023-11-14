@@ -6,20 +6,20 @@ import { CommonLogger } from '../logger/common-logger';
 
 @Catch(HttpException)
 export class HttpExceptionFilter extends BaseExceptionFilter {
-   private logger = new CommonLogger('HttpExceptionFilter');
+  private logger = new CommonLogger('HttpExceptionFilter');
 
-   catch(exception: HttpException, host: ArgumentsHost) {
-      const ctx = host.switchToHttp();
-      const request = ctx.getRequest<Request>();
-      const thisLog: ILog = {
-         endpoint: request.path,
-         ipAddress: request.connection.remoteAddress,
-         method: request.method,
-         error: exception,
-      };
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const request = ctx.getRequest<Request>();
+    const thisLog: ILog = {
+      endpoint: request.path,
+      ipAddress: request.connection.remoteAddress,
+      method: request.method,
+      error: exception,
+    };
 
-      this.logger.customError(exception.message, exception.stack, thisLog);
+    this.logger.customError(exception.message, exception.stack, thisLog);
 
-      super.catch(exception, host);
-   }
+    super.catch(exception, host);
+  }
 }
