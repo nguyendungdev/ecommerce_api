@@ -16,7 +16,10 @@ export class OrderService {
       private readonly orderRepository: OrderRepository,
       private readonly orderItemRepository: OrderItemRepository,
       private readonly productService: ProductService,
+<<<<<<< HEAD
+=======
       private readonly userService: UserService,
+>>>>>>> origin/main
    ) {}
 
    /**

@@ -4,6 +4,9 @@ import { Injectable } from '@nestjs/common';
 import { User } from '../user/entities/user.entity';
 
 @Injectable()
+<<<<<<< HEAD
+export class OrderRepository extends Repository<Order> {}
+=======
 export class OrderRepository extends Repository<Order> {
    constructor(private dataSource: DataSource) {
       super(Order, dataSource.createEntityManager());
@@ -31,3 +34,4 @@ export class OrderRepository extends Repository<Order> {
       return order;
    }
 }
+>>>>>>> origin/main
