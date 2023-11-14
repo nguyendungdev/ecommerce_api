@@ -6,6 +6,8 @@ drop table if exists  "rating";
 drop table if exists  "category_product";
 drop table if exists  "product";
 drop table if exists  "category";
+drop table if exists  "session";
+drop table if exists  "forgot";
 drop table if exists  "payment";
 drop table if exists  "order";
 drop table if exists  "user";
@@ -14,7 +16,7 @@ drop table if exists  "user";
 DROP TYPE IF EXISTS user_roles;
 DROP TYPE IF EXISTS users_roles_enum;
 
-CREATE TYPE user_roles AS ENUM('User', 'Admin');
+CREATE TYPE user_roles AS ENUM('User','Admin','Seller');
 DROP TYPE IF EXISTS payment_methods;
 CREATE TYPE payment_methods AS ENUM('VISA', 'PAYPAL','CASH_ON_DELIVERY','MASTERCARD','PURCHASE_ORDER');
 DROP TYPE IF EXISTS order_stats;
@@ -77,13 +79,12 @@ create table "payment"
 create table "order"
 (
     id uuid primary key default gen_random_uuid(),
-    order_date date not null ,
     status order_stats default 'PROCESSED',
     shipment_date timestamp,
     comment varchar(255),
     shipped_to varchar(255) not null,
     user_id uuid references "user"(id) on delete cascade ,
-    create_at timestamp not null default NOW(),
+    order_date timestamp not null default NOW(),
     update_at timestamp,
     delete_at timestamp
 );
@@ -136,5 +137,20 @@ create table "review"
 );
 
 
+create table "session"
+(
+   id uuid primary key default gen_random_uuid(),
+    user_id uuid references "user"(id) on delete cascade ,
+    create_at timestamp not null default NOW(),
+    delete_at timestamp
+);
 
+create table "forgot"
+(
+    id uuid primary key default gen_random_uuid(),
+    hash varchar(50) not null ,
+    user_id uuid references "user"(id) on delete cascade ,
+    create_at timestamp not null default NOW(),
+    delete_at timestamp
+);
 

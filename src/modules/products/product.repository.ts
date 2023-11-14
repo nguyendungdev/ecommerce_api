@@ -1,32 +1,41 @@
 import { Repository, DataSource } from 'typeorm';
-import { Product } from './entities/product.entity';
 import { Injectable } from '@nestjs/common/decorators';
 import { ProductInfoDTO } from './dto/product-info.dto';
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductRepository extends Repository<Product> {
-   constructor(private dataSource: DataSource) {
-      super(Product, dataSource.createEntityManager());
-   }
+  constructor(private dataSource: DataSource) {
+    super(Product, dataSource.createEntityManager());
+  }
 
-   async getPriceById(productId: Product['id']): Promise<number> {
-      const product = await this.manager.query(`
+  async getPriceById(productId: Product['id']): Promise<number> {
+    const product = await this.manager.query(`
          select base_price - product.base_price * product.discount_percentage as total_price
          from product
-         where id = '${productId}';
-      `);
-      const totalPrice: number = product[0].total_price;
-      console.log(totalPrice);
-      return totalPrice;
-   }
+         where id = $1;
+      `, [productId]);
+    const totalPrice: number = product[0].total_price;
+    return totalPrice;
+  }
 
-   async getProductPaginate(
-      findOption: string,
-      page: number,
-   ): Promise<ProductInfoDTO[]> {
-      const limit = 10;
-      const productSkip = (page - 1) * limit;
-      const product = await this.manager.query(`
+  async getQuantity(productId: Product['id']): Promise<number> {
+    const product = await this.manager.query(`
+         select stock
+         from product
+         where id = $1;
+      `, [productId]);
+    const totalPrice: number = product[0].stock
+    return totalPrice;
+  }
+
+  async getProductPaginate(
+    findOption: string,
+    page: number,
+  ): Promise<ProductInfoDTO[]> {
+    const limit = 10;
+    const productSkip = (page - 1) * limit;
+    const product = await this.manager.query(`
       select p.name,
        p.img_url,
        p.description,
@@ -41,14 +50,14 @@ export class ProductRepository extends Repository<Product> {
        limit ${limit}
        offset ${productSkip};
       `);
-      return product;
-   }
+    return product;
+  }
 
-   async updateNewReview(id: Product['id'], point: number) {
-      await this.manager.query(`
+  async updateNewReview(id: Product['id'], point: number) {
+    await this.manager.query(`
          update product
-         set total_review = total_review + ${point}
-         where id = '${id}';
-      `);
-   }
+         set total_review = total_review + $1
+         where id = $2;
+      `, [id, point]);
+  }
 }
