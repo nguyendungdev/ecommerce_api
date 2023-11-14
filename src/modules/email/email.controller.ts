@@ -1,68 +1,72 @@
 import {
-   Controller,
-   ClassSerializerInterceptor,
-   UseInterceptors,
-   Post,
-   UseGuards,
-   Req,
-   Body,
-   Param,
+  Controller,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+  Post,
+  UseGuards,
+  Req,
+  Query,
 } from '@nestjs/common';
-import EmailService from './email.service';
+import { EmailService } from './email.service';
 import { AuthGuard } from '@nestjs/passport';
-import ConfirmEmailDto from './dto/confirm-email.dto';
 import {
-   ApiTags,
-   ApiBearerAuth,
-   ApiOperation,
-   ApiBadRequestResponse,
-   ApiInternalServerErrorResponse,
-   ApiOkResponse,
-   ApiUnauthorizedResponse,
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiBadRequestResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { CommonDescription } from '@common/constants/descriptions.constants';
+import { ErrorResponse } from '@common/dto/response.dto';
+import { EmailDescription, EmailSummary } from './email.constants';
 
 @ApiTags('Email Confirmation')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
 @Controller('auth/email-confirmation')
 @UseInterceptors(ClassSerializerInterceptor)
 export class EmailController {
-   constructor(private readonly emailService: EmailService) {}
+  constructor(private readonly emailService: EmailService) { }
 
-   @Post('resend-confirmation-link')
-   @ApiOperation({ summary: 'Resend email confirmation link' })
-   @ApiOkResponse({
-      description: 'Email confirmation link resent successfully',
-   })
-   @ApiBadRequestResponse({
-      description: 'Bad request',
-   })
-   @ApiInternalServerErrorResponse({
-      description: 'Internal server error',
-   })
-   async resendConfirmationLink(@Req() request) {
-      await this.emailService.resendConfirmationLink(request.user.email);
-   }
+  @Post('')
+  @ApiOperation({ summary: EmailSummary.RESEND_CONFIRMATION_LINK })
+  @ApiOkResponse({
+    description: EmailDescription.RESEND_CONFIRMATION_LINK_SUCCESS,
+  })
+  @ApiBadRequestResponse({
+    description: CommonDescription.BAD_REQUEST,
+    type: ErrorResponse,
+  })
+  @ApiUnauthorizedResponse({
+    description: CommonDescription.UNAUTHORIZED,
+    type: ErrorResponse,
+  })
+  @ApiInternalServerErrorResponse({
+    description: CommonDescription.INTERNAL_SERVER_ERROR,
+    type: ErrorResponse,
+  })
+  async resendConfirmationLink(@Req() request) {
+    return this.emailService.resendConfirmationLink(request.user.email);
+  }
 
-   @Post('/confirm/:id')
-   @ApiOperation({ summary: 'Confirm email using token' })
-   @ApiOkResponse({
-      description: 'Email confirmed successfully',
-   })
-   @ApiBadRequestResponse({
-      description: 'Bad request',
-   })
-   @ApiUnauthorizedResponse({
-      description: 'Unauthorized',
-   })
-   @ApiInternalServerErrorResponse({
-      description: 'Internal server error',
-   })
-   @Post('/confirm/:id')
-   async confirm(@Body() confirmationData: ConfirmEmailDto) {
-      const email = await this.emailService.decodeConfirmationToken(
-         confirmationData.token,
-      );
-      await this.emailService.confirmEmail(email);
-   }
+  @Post('/confirm')
+  @ApiOperation({ summary: EmailSummary.CONFIRM_EMAIL })
+  @ApiOkResponse({
+    description: EmailDescription.CONFIRM_EMAIL_SUCCESS,
+  })
+  @ApiBadRequestResponse({
+    description: CommonDescription.BAD_REQUEST,
+  })
+  @ApiUnauthorizedResponse({
+    description: CommonDescription.UNAUTHORIZED,
+  })
+  @ApiInternalServerErrorResponse({
+    description: CommonDescription.INTERNAL_SERVER_ERROR,
+  })
+  @Post('/confirm')
+  async confirm(@Query('token') token: string) {
+    const email = await this.emailService.decodeConfirmationToken(token);
+    return this.emailService.confirmEmail(email);
+  }
 }

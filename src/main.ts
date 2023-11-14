@@ -8,32 +8,33 @@ import { CommonLogger } from './common/logger/common-logger';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
-   const logger = new CommonLogger('Main');
-   const app = await NestFactory.create(AppModule, {
-      logger:
-         process.env.NODE_ENV === 'production'
-            ? ['error', 'warn']
-            : ['log', 'debug', 'error', 'verbose', 'warn'],
-   });
-   const options = new DocumentBuilder()
-      .setTitle('Ecommerce back-end Template')
-      .setDescription('The Back-end Template API description')
-      .setVersion('1.0')
-      .addTag('template')
-      .addBearerAuth({ type: 'apiKey', name: 'Authorization', in: 'header' })
-      .build();
+  const logger = new CommonLogger('Main');
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+    logger:
+      process.env.NODE_ENV === 'production'
+        ? ['error', 'warn']
+        : ['log', 'debug', 'error', 'verbose', 'warn'],
+  });
 
-   const document = SwaggerModule.createDocument(app, options);
-   SwaggerModule.setup('api', app, document);
+  const options = new DocumentBuilder()
+    .setTitle('Back-end Template')
+    .setDescription('The Back-end Template API description')
+    .setVersion('1.0')
+    .addTag('template')
+    .addBearerAuth({ type: 'http', name: 'Authorization', in: 'header' })
+    .build();
 
-   const { httpAdapter } = app.get(HttpAdapterHost);
-   app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
 
-   app.useGlobalInterceptors(
-      new ClassSerializerInterceptor(app.get(Reflector)),
-   );
-   const port = appConfig.port;
-   logger.log(`App is listening on port ${port}`);
-   await app.listen(port);
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new HttpExceptionFilter(httpAdapter));
+
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
+  const port = appConfig.port;
+  logger.log(`App is listening on port ${port}`);
+  await app.listen(port);
 }
 bootstrap();

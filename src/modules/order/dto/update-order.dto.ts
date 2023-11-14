@@ -12,21 +12,21 @@ export class OrderItemUpdateDto {
    @IsNumber()
    @IsOptional()
    @ApiProperty({ description: 'Total price of the item', example: 1 })
-   totalPrice: number;
+   total_price: number;
 
    @IsString()
    @ApiProperty({
       description: 'ID of the order item',
       example: '574c3d35-0e6f-4141-8e90-f018a803fd59',
    })
-   orderItemId: string;
+   order_item_id: string;
 }
 
 export class UpdateOrderDto {
    @IsOptional()
    @IsDate()
    @ApiProperty({ description: 'Order date', example: '2023-07-27' })
-   orderDate: Date;
+   order_date: Date;
 
    @IsOptional()
    @IsString()
@@ -36,7 +36,7 @@ export class UpdateOrderDto {
    @IsOptional()
    @IsString()
    @ApiProperty({ description: 'Shipment date', example: '2023-07-29' })
-   shipmentDate: string;
+   shipment_date: string;
 
    @IsString()
    @IsOptional()
@@ -52,12 +52,12 @@ export class UpdateOrderDto {
       description: 'Shipping address',
       example: '1234 Main Street',
    })
-   shippedTo: string;
+   shipped_to: string;
 
    @IsString()
    @IsOptional()
    @ApiProperty({ description: 'User ID', example: '1234567890' })
-   userId: string;
+   user_id: string;
 
    @ApiProperty({
       description: 'Array of cart items',
@@ -76,14 +76,14 @@ export class UpdateOrderDto {
       type: [OrderItemUpdateDto],
    })
    @Type(() => OrderItemUpdateDto)
-   orderItems: OrderItemUpdateDto[];
+   order_items: OrderItemUpdateDto[];
 }
 
 export class OrderDto {
    @IsOptional()
    @IsDate()
    @ApiProperty({ description: 'Order date', example: '2023-07-27' })
-   orderDate: Date;
+   order_date: Date;
 
    @IsOptional()
    @IsString()
@@ -93,7 +93,7 @@ export class OrderDto {
    @IsOptional()
    @IsString()
    @ApiProperty({ description: 'Shipment date', example: '2023-07-29' })
-   shipmentDate: string;
+   shipment_date: string;
 
    @IsString()
    @IsOptional()
@@ -109,12 +109,12 @@ export class OrderDto {
       description: 'Shipping address',
       example: '1234 Main Street',
    })
-   shippedTo: string;
+   shipped_to: string;
 
    @IsString()
    @IsOptional()
    @ApiProperty({ description: 'User ID', example: '1234567890' })
-   userId: string;
+   user_id: string;
 }
 
 export class OrderItemDto {
@@ -126,5 +126,5 @@ export class OrderItemDto {
    @IsNumber()
    @IsOptional()
    @ApiProperty({ description: 'Total price of the item', example: 1 })
-   totalPrice: number;
+   total_price: number;
 }

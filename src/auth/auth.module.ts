@@ -1,38 +1,27 @@
-import {
-   Module,
-   NestModule,
-   MiddlewareConsumer,
-   forwardRef,
-} from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { UserModule } from '../modules/user/user.module';
+import { Module, forwardRef } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConfig } from 'src/configs/configs.constants';
+import { UserModule } from '@users/user.module';
+import { EmailModule } from '@email/email.module';
+import { ForgotModule } from '@forgot/forgot.module';
+import { SessionModule } from '@sessions/session.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
-import { JwtMiddleware } from './middlewares/jwt.middleware';
-import { EmailModule } from '../modules/email/email.module';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 
 @Module({
-   imports: [
-      UserModule,
-      PassportModule,
-      forwardRef(() => EmailModule),
-      JwtModule.register({
-         secret: jwtConfig.secret,
-         signOptions: {
-            expiresIn: jwtConfig.expiresIn,
-         },
-      }),
-   ],
-   controllers: [AuthController],
-   providers: [AuthService, JwtStrategy, GoogleStrategy],
-   exports: [AuthService, JwtModule],
+  imports: [
+    UserModule,
+    PassportModule,
+    ForgotModule,
+    SessionModule,
+    forwardRef(() => EmailModule),
+    JwtModule.register({}),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, JwtRefreshStrategy],
+  exports: [AuthService, JwtModule],
 })
-export class AuthModule implements NestModule {
-   configure(consumer: MiddlewareConsumer) {
-      consumer.apply(JwtMiddleware).forRoutes('*');
-   }
-}
+export class AuthModule {}

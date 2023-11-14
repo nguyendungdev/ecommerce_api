@@ -9,6 +9,7 @@ import {
    Get,
    Put,
    NotFoundException,
+   Query,
 } from '@nestjs/common';
 import {
    ApiBadRequestResponse,
@@ -26,7 +27,7 @@ import { ErrorResponse } from '../../common/dto/response.dto';
 import { InvoiceService } from './invoice.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
-import { Invoice } from './invoice.entity';
+import { Invoice } from './entities/invoice.entity';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 import { CommonDescription } from 'src/common/constants/descriptions.constants';
 
@@ -37,7 +38,7 @@ import { CommonDescription } from 'src/common/constants/descriptions.constants';
 export class InvoiceController {
    constructor(private readonly invoiceService: InvoiceService) {}
 
-   @Get('/:id')
+   @Get('/')
    @HttpCode(HttpStatus.OK)
    @ApiOperation({ summary: 'Get all invoices' })
    @ApiParam({ name: 'id', type: 'string', description: 'User ID' })
@@ -54,11 +55,11 @@ export class InvoiceController {
       description: 'Internal server error',
       type: ErrorResponse,
    })
-   async getAll(@Param('id') id: string): Promise<Invoice[]> {
+   async getAll(@Query('id') id: string): Promise<Invoice[]> {
       return this.invoiceService.getAllInvoice(id);
    }
 
-   @Post('create')
+   @Post('')
    @HttpCode(HttpStatus.OK)
    @ApiOperation({ summary: 'Create new invoice' })
    @ApiBody({ type: CreateInvoiceDto })
@@ -78,7 +79,7 @@ export class InvoiceController {
       this.invoiceService.createInvoice(createInvoiceDto);
    }
 
-   @Put('/update/:id')
+   @Put('/:id')
    @ApiOperation({ summary: 'Update category by ID' })
    @ApiParam({ name: 'id', type: 'string' })
    @ApiBody({ type: UpdateInvoiceDto })

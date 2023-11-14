@@ -10,7 +10,6 @@ import { AuthGuard } from '@nestjs/passport';
 import {
    ApiBadRequestResponse,
    ApiBearerAuth,
-   ApiBody,
    ApiInternalServerErrorResponse,
    ApiOkResponse,
    ApiOperation,
@@ -20,17 +19,16 @@ import {
 } from '@nestjs/swagger';
 import { CommonDescription } from 'src/common/constants/descriptions.constants';
 import { ErrorResponse } from '../../common/dto/response.dto';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 import { UsersSummary } from './user.constants';
 import { Roles } from '../../common/decorators/role.decorators';
 import { RolesGuard } from './guards/roles.guard';
 import { Role } from './roles.enum';
-import { EmailConfirmationGuard } from '../email/guards/emailConfirmation.guard';
 
 @ApiTags('Users')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'), RolesGuard, EmailConfirmationGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('user')
 @Roles(Role.Admin)
 export class UserController {

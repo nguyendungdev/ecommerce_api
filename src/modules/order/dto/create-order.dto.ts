@@ -2,26 +2,23 @@ import { OrderStatus } from '../order-status.enum';
 import {
    IsNumber,
    IsNotEmpty,
-   IsUUID,
-   ValidateNested,
    IsString,
    IsDate,
    IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { Product } from '../../product/product.entity';
 
 export class OrderItemDto {
    @IsNumber()
    @IsNotEmpty()
    @ApiProperty({ description: 'Quantity of the item', example: 2 })
-   quantity: number;
+   quanity: number;
 
    @IsNumber()
    @IsNotEmpty()
    @ApiProperty({ description: 'Total price of the item', example: 1 })
-   totalPrice: number;
+   total_price: number;
 
    @IsString()
    @IsNotEmpty()
@@ -29,14 +26,14 @@ export class OrderItemDto {
       description: 'ID of the product',
       example: '574c3d35-0e6f-4141-8e90-f018a803fd59',
    })
-   productId: string;
+   product_id: string;
 }
 
 export class CreateOrderDto {
    @IsNotEmpty()
    @IsDate()
    @ApiProperty({ description: 'Order date', example: '2023-07-27' })
-   orderDate: Date;
+   order_date: Date;
 
    @IsNotEmpty()
    @IsString()
@@ -46,7 +43,7 @@ export class CreateOrderDto {
    @IsNotEmpty()
    @IsString()
    @ApiProperty({ description: 'Shipment date', example: '2023-07-29' })
-   shipmentDate: string;
+   shipment_date: string;
 
    @IsString()
    @IsOptional()
@@ -62,12 +59,12 @@ export class CreateOrderDto {
       description: 'Shipping address',
       example: '1234 Main Street',
    })
-   shippedTo: string;
+   shipped_to: string;
 
    @IsNotEmpty()
    @IsString()
    @ApiProperty({ description: 'User ID', example: '1234567890' })
-   userId: string;
+   user_id: string;
 
    @ApiProperty({
       description: 'Array of cart items',
@@ -86,5 +83,5 @@ export class CreateOrderDto {
       type: [OrderItemDto],
    })
    @Type(() => OrderItemDto)
-   orderItems: OrderItemDto[];
+   order_items: OrderItemDto[];
 }

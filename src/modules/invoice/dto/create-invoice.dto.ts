@@ -8,23 +8,23 @@ export class CreateInvoiceDto {
 
    @IsDate()
    @ApiProperty({ example: '2023-07-14', description: 'Invoice date' })
-   invoiceDate: Date;
+   invoice_date: Date;
 
    @IsDate()
    @ApiProperty({ example: '2023-07-21', description: 'Due date' })
-   dueDate: Date;
+   due_date: Date;
 
    @IsDate()
    @ApiProperty({ example: '2023-07-21 12:00:00', description: 'Payment date' })
-   paymentDate: Date;
+   payment_date: Date;
 
    @IsString()
-   orderId: string;
+   order_id: string;
 
    @IsString()
    @ApiProperty({
       example: 'da400369-2342-42c1-980f-17d3519267aa',
       description: `payment's id`,
    })
-   paymentId: string;
+   payment_id: string;
 }

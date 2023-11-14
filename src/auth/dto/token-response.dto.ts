@@ -1,3 +1,6 @@
 export default class TokenResponseDto {
-   jwtAccessToken: string;
+  jwtAccessToken: string;
+  refreshToken: string;
+  tokenExpires: number;
+  sessionId?: string;
 }

@@ -4,7 +4,7 @@ import {
    BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../../modules/user/user.service';
+import { UserService } from '../../modules/users/user.service';
 
 @Injectable()
 export class JwtMiddleware implements NestMiddleware {
@@ -22,14 +22,11 @@ export class JwtMiddleware implements NestMiddleware {
             req.user = decodedJwt;
             req.user.isConfirmed = (
                await this.userService.getByEmail(decodedJwt.email)
-            ).isConfirmed;
+            ).is_confirmed;
          } catch (error) {
-            console.error('Failed to verify JWT:', error.message);
-            res.status(401).json({ message: 'Unauthorized' });
             return;
          }
       }
-
       next();
    }
 }

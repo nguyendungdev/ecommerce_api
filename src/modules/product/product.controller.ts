@@ -7,10 +7,12 @@ import {
    Delete,
    Patch,
    UseGuards,
+   Query,
+   ParseIntPipe,
+   DefaultValuePipe,
 } from '@nestjs/common';
-import { Product } from './product.entity';
+import { Product } from './entities/product.entity';
 import { ProductService } from './product.service';
-import { FilterProductDTO } from './dto/filter-product.dto';
 import { CreateProductDTO } from './dto/create-product.dto';
 import {
    ApiBadRequestResponse,
@@ -25,9 +27,11 @@ import {
    ApiCreatedResponse,
    ApiConflictResponse,
    ApiNoContentResponse,
+   ApiQuery,
 } from '@nestjs/swagger';
 import { ErrorResponse } from '../../common/dto/response.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ProductInfoDTO } from './dto/product-info.dto';
 
 @ApiTags('Product')
 @ApiBearerAuth()
@@ -36,7 +40,7 @@ import { AuthGuard } from '@nestjs/passport';
 export class ProductController {
    constructor(private readonly productService: ProductService) {}
 
-   @Get('/all')
+   @Get('')
    @ApiOperation({ summary: 'Get all products' })
    @ApiOkResponse({
       description: 'Successfully retrieved all products',
@@ -52,7 +56,27 @@ export class ProductController {
       return products;
    }
 
-   @Post('/new')
+   @Get('/search/')
+   @ApiOperation({ summary: 'search for products' })
+   @ApiQuery({ name: 'category_id', required: false })
+   @ApiQuery({ name: 'name', required: false })
+   @ApiOkResponse({
+      description: 'Successfully retrieved all products',
+      type: ProductInfoDTO,
+   })
+   @ApiInternalServerErrorResponse({
+      description: 'Internal server error',
+      type: ErrorResponse,
+   })
+   async search(
+      @Query('name') name: string,
+      @Query('category_id') categoryId: string,
+      @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+   ): Promise<ProductInfoDTO[]> {
+      return await this.productService.searchProduct(page, name, categoryId);
+   }
+
+   @Post('/')
    @ApiOperation({ summary: 'Create a new product' })
    @ApiBody({ type: CreateProductDTO })
    @ApiCreatedResponse({
@@ -72,7 +96,7 @@ export class ProductController {
       await this.productService.createProduct(createProductDto);
    }
 
-   @Delete('/delete/:id')
+   @Delete('/:id')
    @ApiOperation({ summary: 'Delete product by ID' })
    @ApiParam({ name: 'id', type: 'string', description: 'Product ID' })
    @ApiNoContentResponse({
@@ -90,7 +114,7 @@ export class ProductController {
       await this.productService.deleteProduct(id);
    }
 
-   @Patch('/restore/:id')
+   @Patch('/:id/restore/')
    @ApiOperation({ summary: 'Restore product by ID' })
    @ApiParam({ name: 'id', type: 'string', description: 'Product ID' })
    @ApiNoContentResponse({

@@ -11,9 +11,10 @@ import {
    Delete,
    NotFoundException,
    Patch,
+   Query,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { Order } from './order.entity';
+import { Order } from './entities/order.entity';
 import {
    ApiBadRequestResponse,
    ApiBearerAuth,
@@ -41,7 +42,7 @@ import { CommonSummary } from 'src/common/constants/summary.constants';
 export class OrderController {
    constructor(private readonly orderService: OrderService) {}
 
-   @Get('/get/:id')
+   @Get('/')
    @HttpCode(HttpStatus.OK)
    @ApiOperation({ summary: 'Get orders by user ID' })
    @ApiParam({ name: 'id', type: 'string' })
@@ -53,11 +54,11 @@ export class OrderController {
       description: 'Internal server error',
       type: ErrorResponse,
    })
-   async getOrder(@Param('id') userId: string): Promise<Order[]> {
+   async getOrder(@Query('id') userId: string): Promise<Order[]> {
       return this.orderService.findOrders(userId);
    }
 
-   @Post('/create')
+   @Post('')
    @HttpCode(HttpStatus.CREATED)
    @ApiOperation({ summary: `${CommonSummary.CREATE_NEW_ITEM} order` })
    @ApiCreatedResponse({
@@ -76,7 +77,7 @@ export class OrderController {
       this.orderService.createOrder(createOrderDto);
    }
 
-   @Patch('/update-status/:id')
+   @Patch(':id/update-status/')
    @HttpCode(HttpStatus.NO_CONTENT)
    @ApiOperation({ summary: `${CommonSummary.UPDATE_ITEM} order status by ID` })
    @ApiParam({ name: 'id', type: 'string' })
@@ -95,7 +96,7 @@ export class OrderController {
       this.orderService.updateStatus(id);
    }
 
-   @Delete('/delete/:id')
+   @Delete('/:id')
    @HttpCode(HttpStatus.NO_CONTENT)
    @ApiOperation({ summary: `${CommonSummary.DELETE_ITEM} an order by ID` })
    @ApiParam({ name: 'id', type: 'string' })
@@ -114,7 +115,7 @@ export class OrderController {
       this.orderService.deleteOrder(id);
    }
 
-   @Patch(':orderId/restore/:id')
+   @Patch(':orderId/restore/')
    @HttpCode(HttpStatus.NO_CONTENT)
    @ApiOperation({ summary: 'Restore a soft-deleted order by ID' })
    @ApiParam({ name: 'orderId', type: 'string' })
@@ -133,7 +134,7 @@ export class OrderController {
       return this.orderService.restoreOrder(orderId);
    }
 
-   @Put('/update/:id')
+   @Put('/:id')
    @ApiOperation({ summary: 'Update order by ID' })
    @ApiParam({ name: 'id', type: 'string' })
    @ApiBody({ type: UpdateOrderDto })
