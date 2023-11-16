@@ -1,4 +1,8 @@
-export enum OrdersMessage {}
+export enum OrdersMessage {
+  NOT_FOUND_BY_USER_ID = 'User has no orders',
+  NOT_FOUND_BY_ID = 'No order found',
+  NOT_FOUND_BY_ORDER_ID = 'No order item found',
+}
 
 export enum OrdersSummary {
   CREATE_NEW = 'Create new order',

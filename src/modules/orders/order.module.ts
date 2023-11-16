@@ -9,7 +9,6 @@ import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
 import { OrderRepository } from './order.repository';
 
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderItem]),
@@ -20,4 +19,4 @@ import { OrderRepository } from './order.repository';
   controllers: [OrderController],
   exports: [OrderService],
 })
-export class OrderModule { }
+export class OrderModule {}

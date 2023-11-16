@@ -1,5 +1,5 @@
 # Builder stage
-FROM node:18 AS builder
+FROM node:20 AS builder
 WORKDIR /app
 COPY ./package.json ./
 RUN npm install
@@ -8,7 +8,7 @@ RUN npm run build
 
 
 # Application stage
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 COPY --from=builder /app ./
 EXPOSE 3000

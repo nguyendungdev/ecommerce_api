@@ -32,4 +32,4 @@ import { CategoryProductSeedModule } from './category-product/category-product-s
     TypeOrmModule.forRoot(TypeOrmConfig),
   ],
 })
-export class SeedModule { }
+export class SeedModule {}

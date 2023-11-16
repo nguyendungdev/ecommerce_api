@@ -5,10 +5,8 @@ import { ProductRepository } from '@products/product.repository';
 import { ProductSeedService } from './product-seed.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Product])],
-    providers: [ProductSeedService, ProductRepository],
-    exports: [ProductSeedModule],
+  imports: [TypeOrmModule.forFeature([Product])],
+  providers: [ProductSeedService, ProductRepository],
+  exports: [ProductSeedModule],
 })
-export class ProductSeedModule {
-
-}
+export class ProductSeedModule {}

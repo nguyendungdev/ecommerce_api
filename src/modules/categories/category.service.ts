@@ -14,7 +14,7 @@ import { CategoriesMessage } from './category.constants';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly categoryRepository: CategoryRepository) { }
+  constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async getAll(page: number): Promise<NullableType<Category[]>> {
     const category = await this.categoryRepository.getAll(page);

@@ -1,21 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderItemService } from '@order-item/order-item.service';
+import { UserService } from '@users/user.service';
+import { Session } from '@sessions/entities/session.entity';
 import { InvoiceRepository } from './invoice.repository';
 import { Invoice } from './entities/invoice.entity';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
-
+import { InvoicesMessage } from './invoice.constants';
 @Injectable()
 export class InvoiceService {
   constructor(
     private readonly orderItemService: OrderItemService,
     private readonly invoiceRepository: InvoiceRepository,
-  ) { }
+    private readonly userService: UserService,
+  ) {}
 
-  async getAllInvoice(id: string): Promise<Invoice[]> {
-    const invoices = await this.invoiceRepository.getAllByUserId(id);
+  async getAllInvoice(sessionId: Session['id']): Promise<Invoice[]> {
+    const userId = await this.userService.getBySessionId(sessionId);
+    const invoices = await this.invoiceRepository.getAllByUserId(userId[0].id);
     if (!invoices || invoices.length === 0) {
-      throw new NotFoundException(`No invoices found for order with ID ${id}`);
+      throw new NotFoundException(InvoicesMessage.NOT_FOUND_BY_ORDER_ID);
     }
     return invoices;
   }
@@ -47,9 +51,7 @@ export class InvoiceService {
 
   async delete(id: string): Promise<void> {
     await this.invoiceRepository.softDelete(id);
-
   }
-
   async restore(id: string): Promise<void> {
     await this.invoiceRepository.restore(id);
   }

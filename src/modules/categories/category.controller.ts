@@ -43,7 +43,7 @@ import { CategoriesSummary } from './category.constants';
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('Category')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) { }
+  constructor(private readonly categoryService: CategoryService) {}
 
   @Get('')
   @HttpCode(HttpStatus.OK)
@@ -71,7 +71,7 @@ export class CategoryController {
   }
 
   @Post('')
-  @Roles(Role.Admin)
+  @Roles(Role.Seller)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: CategoriesSummary.CREATE_NEW })
   @ApiBody({ type: CreateCategoryDto })

@@ -19,14 +19,7 @@ export class UpdatePaymentDto {
   payment_method: PaymentMethod;
 
   @ApiProperty({
-    example: '86c504ac-9d66-475d-bc14-7bafa79e6737',
-    description: 'The ID of the user',
-  })
-  @IsString()
-  user_id: string;
-
-  @ApiProperty({
-    example: '2023-12-31T23:59:59Z',
+    example: '2023-12-31',
     description: 'The expiry date of the payment',
   })
   @IsDate()

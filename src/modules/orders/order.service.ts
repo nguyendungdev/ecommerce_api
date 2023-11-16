@@ -7,6 +7,7 @@ import { Order } from './entities/order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './order-status.enum';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrdersMessage } from './order.constants';
 
 @Injectable()
 export class OrderService {
@@ -14,26 +15,22 @@ export class OrderService {
     private readonly orderRepository: OrderRepository,
     private readonly orderItemService: OrderItemService,
     private readonly userService: UserService,
-  ) { }
-
+  ) {}
 
   async getOrders(sessionId: Session['id']): Promise<Order[]> {
-    if (!(await this.userService.getBySessionId(sessionId))) {
-      return null;
-    }
-    const orders = await this.orderRepository.getBySessionId(sessionId);
+    const userId = await this.userService.getBySessionId(sessionId)[0].id;
+    const orders = await this.orderRepository.getBySessionId(userId);
     if (!orders || orders.length === 0) {
-      throw new NotFoundException(`User has no orders`);
+      throw new NotFoundException(OrdersMessage.NOT_FOUND_BY_USER_ID);
     }
 
     return orders;
   }
 
-
   async findOrder(id: Order['id']): Promise<Order> {
     const order = this.orderRepository.getOneOrderById(id);
     if (!order) {
-      throw new NotFoundException(`user have no orders`);
+      throw new NotFoundException(OrdersMessage.NOT_FOUND_BY_USER_ID);
     }
     return order;
   }
@@ -75,7 +72,7 @@ export class OrderService {
       status,
       shipment_date,
       shipped_to,
-      user_id: userId[0],
+      user_id: userId[0].id,
     });
     await newOrder.save();
     for (const item of createOrderDto.order_items) {
@@ -87,13 +84,13 @@ export class OrderService {
     const orderItem = await this.orderItemService.findAll(orderId);
 
     if (!orderItem) {
-      throw new NotFoundException(`Order items not found`);
+      throw new NotFoundException(OrdersMessage.NOT_FOUND_BY_ORDER_ID);
     }
 
     const result = await this.orderRepository.softDelete(orderId);
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Order not found`);
+      throw new NotFoundException(OrdersMessage.NOT_FOUND_BY_ID);
     }
 
     for (const item of orderItem) {
@@ -117,9 +114,7 @@ export class OrderService {
 
     const existingOrder = await this.findOrder(orderId);
     if (!existingOrder) {
-      throw new NotFoundException(
-        `Order with ID ${existingOrder.id} not found`,
-      );
+      throw new NotFoundException(OrdersMessage.NOT_FOUND_BY_ID);
     }
     await this.orderRepository.update(orderId, orderDto);
 
@@ -128,7 +123,7 @@ export class OrderService {
         const id = newOrderUpdate.order_item_id;
         const existingOrderItem = await this.findOrder(orderId);
         if (!existingOrderItem) {
-          throw new NotFoundException(`Order item with ID ${id} not found`);
+          throw new NotFoundException(OrdersMessage.NOT_FOUND_BY_ORDER_ID);
         }
         const { order_item_id, ...orderItemDto } = newOrderUpdate;
         await this.orderItemService.update(id, orderItemDto);

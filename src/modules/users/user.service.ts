@@ -16,7 +16,7 @@ import { UsersMessage } from './user.constants';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly usersRepository: UsersRepository) { }
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async getAll(): Promise<UsersResponseDto> {
     const users = await this.usersRepository.getAll();

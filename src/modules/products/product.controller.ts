@@ -10,7 +10,7 @@ import {
   Query,
   ParseIntPipe,
   DefaultValuePipe,
-  Put
+  Put,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -40,10 +40,10 @@ import { UpdateProductDTO } from './dto/update-product.dto';
 
 @ApiTags('Product')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('Product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
   @Get('')
   @ApiOperation({ summary: ProductsSummary.GET_ALL })
@@ -97,6 +97,7 @@ export class ProductController {
   }
 
   @Post('/')
+  @Roles(Role.Seller, Role.Admin)
   @ApiOperation({ summary: ProductsSummary.CREATE_NEW })
   @ApiBody({ type: CreateProductDTO })
   @ApiCreatedResponse({
@@ -121,6 +122,7 @@ export class ProductController {
   }
 
   @Delete('/:id')
+  @Roles(Role.Seller, Role.Admin)
   @ApiOperation({ summary: ProductsSummary.DELETE_BY_ID })
   @ApiParam({ name: 'id', type: 'string', description: 'Product ID' })
   @ApiOkResponse({
@@ -143,6 +145,7 @@ export class ProductController {
   }
 
   @Patch('/:id/restore/')
+  @Roles(Role.Seller, Role.Admin)
   @ApiOperation({ summary: ProductsSummary.RESTORE_BY_ID })
   @ApiParam({ name: 'id', type: 'string', description: 'Product ID' })
   @ApiOkResponse({
@@ -164,11 +167,10 @@ export class ProductController {
     return this.productService.restore(id);
   }
 
-
   @Put('/:id')
-  @Roles(Role.Admin)
+  @Roles(Role.Seller, Role.Admin)
   @ApiOperation({ summary: ProductsSummary.UPDATE_BY_ID })
-  @ApiParam({ name: 'id', type: 'string' })
+  @ApiParam({ name: 'id', type: 'string', description: `Product's id` })
   @ApiBody({ type: UpdateProductDTO })
   @ApiOkResponse({
     description: CommonDescription.UPDATE_ITEM_SUCESS,

@@ -11,7 +11,7 @@ export class OrderItemService {
   constructor(
     private readonly orderItemRepository: OrderItemRepository,
     private readonly productService: ProductService,
-  ) { }
+  ) {}
 
   async findAll(id: OrderItem['order_id']): Promise<OrderItem[]> {
     const item = await this.orderItemRepository.findByOrderId(id);
@@ -23,7 +23,9 @@ export class OrderItemService {
   async checkQuantity(id: Product['id'], quantity: number): Promise<void> {
     const inStock = await this.productService.getQuantityInStock(id);
     if (quantity > inStock) {
-      throw new NotFoundException(`Not enough quantity in stock for product with ID ${id}.Available: ${inStock}`);
+      throw new NotFoundException(
+        `Not enough quantity in stock for product with ID ${id}.Available: ${inStock}`,
+      );
     }
   }
 

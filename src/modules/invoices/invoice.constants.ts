@@ -1,4 +1,6 @@
-export enum InvoicesMessage {}
+export enum InvoicesMessage {
+  NOT_FOUND_BY_ORDER_ID = 'No invoices found for order with ID',
+}
 
 export enum InvoicesSummary {
   CREATE_NEW = 'Create new invoice',

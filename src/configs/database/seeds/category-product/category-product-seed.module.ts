@@ -5,10 +5,8 @@ import { CategoryProduct } from '@category-product/entities/category-product.ent
 import { CategoryProductSeedService } from './category-product-seed.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([CategoryProduct])],
-    providers: [CategoryProductRepository, CategoryProductSeedService],
-    exports: [CategoryProductSeedModule],
+  imports: [TypeOrmModule.forFeature([CategoryProduct])],
+  providers: [CategoryProductRepository, CategoryProductSeedService],
+  exports: [CategoryProductSeedModule],
 })
-export class CategoryProductSeedModule {
-
-}
+export class CategoryProductSeedModule {}

@@ -5,10 +5,8 @@ import { CategoryRepository } from '@categories/category.repository';
 import { CategorySeedService } from './category-seed.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Category])],
-    providers: [CategorySeedService, CategoryRepository],
-    exports: [CategorySeedModule],
+  imports: [TypeOrmModule.forFeature([Category])],
+  providers: [CategorySeedService, CategoryRepository],
+  exports: [CategorySeedModule],
 })
-export class CategorySeedModule {
-
-}
+export class CategorySeedModule {}
