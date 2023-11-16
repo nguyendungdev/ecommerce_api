@@ -1,4 +1,3 @@
-
 # E-commerce API
   
 ## Introduction
@@ -69,6 +68,28 @@ $ git clone https://github.com/yukioqna/ecommerce-backend.git
 1. Create `config/development.env` and `config/prodution.env` based on `config/sample.env`.
 2. Modify `config/development.env` and `config/production.env` files for each environment.
 3. Modify `src/configs/configs.constants.ts` to import these environment values to the project.
+
+### Set up database.
+
+Start additional containers by running the following command:
+
+```bash
+docker-compose --env-file ./config/development.env up -d
+```
+
+```bash
+#drop database if exists
+docker exec -i db psql -U postgres -c "DROP DATABASE IF EXISTS ecommerce"
+
+#create database
+docker exec -i db psql -U postgres -c "CREATE DATABASE ecommerce"
+
+#create table
+Get-Content ./db/001-init-db.sql | docker exec -i db psql -U postgres -d ecommerce 
+
+#create index
+Get-Content ./db/002-create-index.sql | docker exec -i db psql -U postgres -d ecommerce
+```
 
 ### Quick install.
 ```bash
