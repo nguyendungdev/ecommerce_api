@@ -9,8 +9,8 @@ import * as Mail from 'nodemailer/lib/mailer';
 import { JwtService } from '@nestjs/jwt';
 import { appConfig, emailConfirm } from '@configs/configs.constants';
 import { UserService } from '@users/user.service';
-import { AuthService } from '@auth/auth.service';
 import EmailConfirmPayload from '@auth/payloads/email-check-payload';
+import { EmailMessage } from './email.constants';
 
 @Injectable()
 export class EmailService {
@@ -54,7 +54,7 @@ export class EmailService {
   async confirmEmail(email: string) {
     const user = await this.userService.getByEmail(email);
     if (user.is_confirmed) {
-      throw new BadRequestException('Email already confirmed');
+      throw new BadRequestException(EmailMessage.ALREADY_COMFIRMED);
     }
     await this.userService.markEmailAsConfirmed(email);
   }
@@ -79,7 +79,7 @@ export class EmailService {
   public async resendConfirmationLink(email: string) {
     const user = await this.userService.getByEmail(email);
     if (user.is_confirmed) {
-      throw new BadRequestException('Email already confirmed');
+      throw new BadRequestException(EmailMessage.ALREADY_COMFIRMED);
     }
     await this.sendVerificationLink(email);
   }

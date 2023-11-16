@@ -17,7 +17,7 @@ export class UserSeedService {
           id: 'c5b67e2b-cef7-4139-9375-dc011024c02d',
           email: 'admin@example.com',
           password: password,
-          roles: [Role.Admin],
+          roles: [Role.Admin, Role.Seller, Role.User],
           is_confirmed: true,
           salt: salt,
         }),

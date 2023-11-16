@@ -10,22 +10,28 @@ export class ProductRepository extends Repository<Product> {
   }
 
   async getPriceById(productId: Product['id']): Promise<number> {
-    const product = await this.manager.query(`
+    const product = await this.manager.query(
+      `
          select base_price - product.base_price * product.discount_percentage as total_price
          from product
          where id = $1;
-      `, [productId]);
+      `,
+      [productId],
+    );
     const totalPrice: number = product[0].total_price;
     return totalPrice;
   }
 
   async getQuantity(productId: Product['id']): Promise<number> {
-    const product = await this.manager.query(`
+    const product = await this.manager.query(
+      `
          select stock
          from product
          where id = $1;
-      `, [productId]);
-    const totalPrice: number = product[0].stock
+      `,
+      [productId],
+    );
+    const totalPrice: number = product[0].stock;
     return totalPrice;
   }
 
@@ -54,10 +60,13 @@ export class ProductRepository extends Repository<Product> {
   }
 
   async updateNewReview(id: Product['id'], point: number) {
-    await this.manager.query(`
+    await this.manager.query(
+      `
          update product
          set total_review = total_review + $1
          where id = $2;
-      `, [id, point]);
+      `,
+      [id, point],
+    );
   }
 }

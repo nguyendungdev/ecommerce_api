@@ -6,7 +6,7 @@ export default class AuthLoginDto {
   @IsEmail()
   @ApiProperty({
     description: 'User email.',
-    example: 'example@test.com',
+    example: 'admin@example.com',
   })
   email: string;
 
@@ -14,7 +14,7 @@ export default class AuthLoginDto {
   @IsString()
   @ApiProperty({
     description: 'User password.',
-    example: '123456@Abc',
+    example: 'secret',
   })
   password: string;
 }

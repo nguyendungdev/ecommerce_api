@@ -10,4 +10,4 @@ export enum CategoriesSummary {
   DELETE_BY_ID = 'Delete category by ID',
 }
 
-export enum CategoriesDescription { }
+export enum CategoriesDescription {}

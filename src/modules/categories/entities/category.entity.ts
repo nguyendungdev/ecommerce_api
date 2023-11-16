@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { CategoryProduct } from 'src/modules/category-product/entities/category-product.entity';
+import { CategoryProduct } from '@category-product/entities/category-product.entity';
 
 @Entity({
   name: 'category',

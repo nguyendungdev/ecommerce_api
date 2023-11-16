@@ -10,7 +10,7 @@ import {
   Put,
   Query,
   Delete,
-  Request
+  Request,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -39,14 +39,13 @@ import { InvoiceService } from './invoice.service';
 @Controller('invoice')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@ApiTags('invoice')
+@ApiTags('Invoice')
 export class InvoiceController {
-  constructor(private readonly invoiceService: InvoiceService) { }
+  constructor(private readonly invoiceService: InvoiceService) {}
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: InvoicesSummary.GET_ALL })
-  @ApiParam({ name: 'id', type: 'string', description: 'User ID' })
   @ApiOkResponse({
     description: CommonDescription.GET_ITEM_SUCCESS,
     type: Invoice,
@@ -60,8 +59,8 @@ export class InvoiceController {
     description: CommonDescription.INTERNAL_SERVER_ERROR,
     type: ErrorResponse,
   })
-  async getAll(@Request() req, @Query('id') id: string): Promise<Invoice[]> {
-    return this.invoiceService.getAllInvoice(id);
+  async getAll(@Request() req): Promise<Invoice[]> {
+    return this.invoiceService.getAllInvoice(req.user.session_id);
   }
 
   @Post('')
@@ -89,6 +88,7 @@ export class InvoiceController {
   }
 
   @Put('/:id')
+  @Roles(Role.Seller, Role.Admin)
   @ApiOperation({ summary: InvoicesSummary.UPDATE_BY_ID })
   @ApiParam({ name: 'id', type: 'string' })
   @ApiBody({ type: UpdateInvoiceDto })

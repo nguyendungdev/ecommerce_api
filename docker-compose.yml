@@ -1,14 +1,14 @@
 version: '3.1'
-
 services:
   postgres:
     image: postgres
+    container_name: db
     restart: always
     environment:
-      POSTGRES_USER: yuki
-      POSTGRES_PASSWORD: 1
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     ports:
-      - "5433:5432"
+      - ${DB_PORT}:5432
     volumes:
       - pg_data:/var/lib/postgresql/data/
   api:
@@ -18,10 +18,10 @@ services:
     environment:
       PORT: 3000
       DB_HOST: host.docker.internal
-      DB_USER: yuki
-      DB_PASSWORD: 1
-      DB_NAME: ecommerce
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASS}
+      DB_NAME: ${DB_DATABASE}
     ports:
-      - "3000:3000"
+      - ${APP_PORT}:${APP_PORT}
 volumes:
   pg_data:

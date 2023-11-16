@@ -41,7 +41,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Order')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) { }
+  constructor(private readonly orderService: OrderService) {}
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
@@ -90,7 +90,6 @@ export class OrderController {
   }
 
   @Patch(':id/update-status/')
-  @Roles(Role.Admin)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: OrdersSummary.UPDATE_STATUS_BY_ID })
   @ApiParam({ name: 'id', type: 'string' })

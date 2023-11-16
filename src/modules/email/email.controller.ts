@@ -27,7 +27,7 @@ import { EmailDescription, EmailSummary } from './email.constants';
 @Controller('auth/email-confirmation')
 @UseInterceptors(ClassSerializerInterceptor)
 export class EmailController {
-  constructor(private readonly emailService: EmailService) { }
+  constructor(private readonly emailService: EmailService) {}
 
   @Post('')
   @ApiOperation({ summary: EmailSummary.RESEND_CONFIRMATION_LINK })

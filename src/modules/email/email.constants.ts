@@ -1,4 +1,6 @@
-export enum EmailMessage {}
+export enum EmailMessage {
+  ALREADY_COMFIRMED = 'Email already confirmed',
+}
 
 export enum EmailSummary {
   RESEND_CONFIRMATION_LINK = 'Resend email confirmation link',

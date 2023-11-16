@@ -70,7 +70,7 @@ $ git clone https://github.com/yukioqna/ecommerce-backend.git
 2. Modify `config/development.env` and `config/production.env` files for each environment.
 3. Modify `src/configs/configs.constants.ts` to import these environment values to the project.
 
-### Quick install
+### Quick install.
 ```bash
 $  bash setup.sh
 ```

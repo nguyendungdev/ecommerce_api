@@ -7,6 +7,7 @@ import {
   Post,
   Delete,
   Patch,
+  Request,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -27,21 +28,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { Payment } from './entities/payment.entity';
-import { DeletePaymentDto } from './dto/delete-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { PaymentsSummary } from './payment.constants';
 
 @ApiTags('Payment')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
-@Controller('Payment')
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) { }
 
   @Get('/:id')
-  @ApiOperation({ summary: PaymentsSummary.GET_BY_USER_ID })
-  @ApiParam({ name: 'id', type: 'string', description: 'User ID' })
   @ApiOkResponse({
     description: CommonDescription.GET_ITEM_SUCCESS,
     type: Payment,
@@ -59,8 +56,8 @@ export class PaymentController {
     description: CommonDescription.INTERNAL_SERVER_ERROR,
     type: ErrorResponse,
   })
-  async getAllById(@Param('id') id: string): Promise<Payment[]> {
-    return this.paymentService.findPayments(id);
+  async getAllById(@Request() req): Promise<Payment[]> {
+    return this.paymentService.findPayments(req.user.session_id);
   }
 
   @Post('')
@@ -85,14 +82,18 @@ export class PaymentController {
     type: ErrorResponse,
   })
   async addNewPayment(
+    @Request() req,
     @Body() createPaymentDto: CreatePaymentDto,
   ): Promise<void> {
-    return this.paymentService.addPayment(createPaymentDto);
+    return this.paymentService.addPayment(
+      req.user.session_id,
+      createPaymentDto,
+    );
   }
 
   @Delete('')
   @ApiOperation({ summary: PaymentsSummary.DELETE_BY_ID })
-  @ApiBody({ type: DeletePaymentDto })
+  @ApiParam({ name: 'id', type: 'string' })
   @ApiOkResponse({
     description: CommonDescription.DELETE_ITEM_SUCCESS,
   })
@@ -108,10 +109,8 @@ export class PaymentController {
     description: CommonDescription.INTERNAL_SERVER_ERROR,
     type: ErrorResponse,
   })
-  async deletePayment(
-    @Body() deletePaymentDto: DeletePaymentDto,
-  ): Promise<void> {
-    return this.paymentService.deletePayment(deletePaymentDto);
+  async deletePayment(@Param('id') id: string): Promise<void> {
+    return this.paymentService.deletePayment(id);
   }
 
   @Patch('/:id')

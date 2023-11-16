@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer, } from '@nestjs/common';
+import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from '@products/product.module';
 import { AuthModule } from '@auth/auth.module';
@@ -35,8 +35,6 @@ import LogsMiddleware from '@common/middlewares/logs.middleware';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LogsMiddleware)
-      .forRoutes('*');
+    consumer.apply(LogsMiddleware).forRoutes('*');
   }
 }

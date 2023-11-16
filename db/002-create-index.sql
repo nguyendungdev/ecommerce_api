@@ -34,6 +34,11 @@ on "rating"(id);
 create index idx_invoice_id
 on "invoice"(id);
 
+create index idx_session_id
+on "session"(id);
+
+create index idx_forgot_id
+on "forgot"(id);
 
 
 

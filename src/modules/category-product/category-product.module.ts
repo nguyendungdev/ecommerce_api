@@ -9,4 +9,4 @@ import { CategoryProductRepository } from './category-product.repository';
   providers: [CategoryProductService, CategoryProductRepository],
   exports: [CategoryProductService],
 })
-export class CategoryProductModule { }
+export class CategoryProductModule {}
